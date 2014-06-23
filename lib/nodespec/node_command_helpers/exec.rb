@@ -1,9 +1,9 @@
 require 'open3'
 require 'nodespec/run_options'
-require_relative 'timeout_execution'
+require 'nodespec/timeout_execution'
 
 module NodeSpec
-  module CommandHelpers
+  module NodeCommandHelpers
     class Exec
       include TimeoutExecution
 

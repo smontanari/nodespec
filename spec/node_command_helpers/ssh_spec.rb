@@ -1,7 +1,7 @@
-require 'nodespec/command_helpers/ssh'
+require 'nodespec/node_command_helpers/ssh'
 
 module NodeSpec
-  module CommandHelpers
+  module NodeCommandHelpers
     describe Ssh do
       shared_examples 'an ssh session command run' do |user, original_command, actual_command|
         let(:ssh_session) { double('ssh session') }

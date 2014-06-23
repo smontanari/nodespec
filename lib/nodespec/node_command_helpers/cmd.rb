@@ -1,5 +1,5 @@
 module NodeSpec
-  module CommandHelpers
+  module NodeCommandHelpers
     class Cmd
       def execute command
         raise 'Not supported yet'

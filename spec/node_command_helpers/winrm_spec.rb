@@ -1,7 +1,7 @@
-require 'nodespec/command_helpers/winrm'
+require 'nodespec/node_command_helpers/winrm'
 
 module NodeSpec
-  module CommandHelpers
+  module NodeCommandHelpers
     describe WinRM do
       let(:winrm) { double('winrm session') }
       let(:subject) {WinRM.new(winrm)}

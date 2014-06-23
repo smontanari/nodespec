@@ -1,7 +1,7 @@
 require 'specinfra/helper'
 require 'nodespec/connection_adapters'
 require 'nodespec/backends'
-%w[exec cmd ssh winrm].each {|f| require_relative "command_helpers/#{f}"}
+%w[exec cmd ssh winrm].each {|f| require_relative "node_command_helpers/#{f}"}
 
 module NodeSpec
   class Node
@@ -38,9 +38,9 @@ module NodeSpec
 
     def init_command_helper
       if @remote_connection
-        CommandHelpers.const_get(remote_backend).new(@remote_connection.session)
+        NodeCommandHelpers.const_get(remote_backend).new(@remote_connection.session)
       else
-        CommandHelpers.const_get(local_backend).new
+        NodeCommandHelpers.const_get(local_backend).new
       end
     end
 

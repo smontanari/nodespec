@@ -13,14 +13,14 @@ module NodeSpec
 
     shared_examples 'run command' do |helper|
       it "has runs a command through a command helper" do
-        expect(command_helpers[helper]).to receive(:execute).with('test command')
+        expect(node_command_helpers[helper]).to receive(:execute).with('test command')
         
         subject.execute_command('test command')
       end
     end
 
     let(:rspec_subject) {double('rspec subject')}
-    let(:command_helpers) {
+    let(:node_command_helpers) {
       {
         exec_helper:  double('exec_helper'),
         cmd_helper:   double('cmd_helper'),
@@ -30,10 +30,10 @@ module NodeSpec
     }
 
     before do
-      CommandHelpers::Exec.stub(:new => command_helpers[:exec_helper])
-      CommandHelpers::Cmd.stub(:new => command_helpers[:cmd_helper])
-      CommandHelpers::Ssh.stub(:new).with('remote session').and_return(command_helpers[:ssh_helper])
-      CommandHelpers::WinRM.stub(:new).with('remote session').and_return(command_helpers[:winrm_helper])
+      NodeCommandHelpers::Exec.stub(:new => node_command_helpers[:exec_helper])
+      NodeCommandHelpers::Cmd.stub(:new => node_command_helpers[:cmd_helper])
+      NodeCommandHelpers::Ssh.stub(:new).with('remote session').and_return(node_command_helpers[:ssh_helper])
+      NodeCommandHelpers::WinRM.stub(:new).with('remote session').and_return(node_command_helpers[:winrm_helper])
     end
 
     it 'does not change the original options' do
