@@ -1,17 +1,18 @@
 require 'shellwords'
-require 'nodespec/node_proxy'
 
 module NodeSpec
   module Provisioning
     class Shellscript
-      include NodeProxy
+      def initialize(node)
+        @node = node
+      end
 
       def execute_file(path)
-        execute_command(path)
+        @node.execute_command(path)
       end
 
       def execute_script(script)
-        execute_command("sh -c #{script.shellescape}")
+        @node.execute_command("sh -c #{script.shellescape}")
       end
     end
   end

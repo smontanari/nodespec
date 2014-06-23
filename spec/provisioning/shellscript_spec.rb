@@ -3,7 +3,8 @@ require 'nodespec/provisioning/shellscript'
 
 module NodeSpec
   module Provisioning
-    describe Shellscript do
+    describe Shellscript, init_with_current_node: true do
+      # let()
       it_executes_the_node_command('/path/to/test/script.sh') do
         execute_file('/path/to/test/script.sh')
       end

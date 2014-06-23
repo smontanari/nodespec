@@ -1,18 +1,20 @@
 require 'shellwords'
-require 'nodespec/node_proxy'
 
 module NodeSpec
   module Provisioning
     class Chef
-      include NodeProxy
       CUSTOM_CLIENT_FILENAME = 'nodespec_chef_client.rb'
 
+      def initialize(node)
+        @node = node
+      end
+
       def chef_apply_execute(snippet, options = [])
-        execute_command("chef-apply #{options.join(' ')} -e #{snippet.shellescape}")
+        @node.execute_command("chef-apply #{options.join(' ')} -e #{snippet.shellescape}")
       end
 
       def chef_apply_recipe(recipe_file, options = [])
-        execute_command("chef-apply #{recipe_file.shellescape} #{options.join(' ')}")
+        @node.execute_command("chef-apply #{recipe_file.shellescape} #{options.join(' ')}")
       end
 
       def set_cookbook_paths(*paths)
@@ -31,10 +33,10 @@ module NodeSpec
         recipes << args.take_while {|arg| arg.is_a? String}
         options += args.last if args.last.is_a? Array
         if @custom_client_configuration
-          execute_command("echo #{@custom_client_configuration.shellescape} > #{CUSTOM_CLIENT_FILENAME}")
+          @node.execute_command("echo #{@custom_client_configuration.shellescape} > #{CUSTOM_CLIENT_FILENAME}")
           options << "-c #{CUSTOM_CLIENT_FILENAME}"
         end
-        execute_command("chef-client -z #{options.join(' ')} -o #{recipes.join(',').shellescape}")
+        @node.execute_command("chef-client -z #{options.join(' ')} -o #{recipes.join(',').shellescape}")
       end
     end
   end

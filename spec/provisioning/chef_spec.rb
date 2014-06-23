@@ -3,7 +3,7 @@ require 'nodespec/provisioning/chef'
 
 module NodeSpec
   module Provisioning
-    describe Chef do
+    describe Chef, init_with_current_node: true do
       describe 'running chef-apply' do
         it_executes_the_node_command('chef-apply --opt1 --opt2 -e include_recipe\ \"main::cron\"') do
           chef_apply_execute 'include_recipe "main::cron"', %w[--opt1 --opt2]
