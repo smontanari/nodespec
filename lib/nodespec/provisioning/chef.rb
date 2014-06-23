@@ -5,7 +5,7 @@ module NodeSpec
   module Provisioning
     class Chef
       include NodeProxy
-      CUSTOM_CLIENT_FILENAME = 'nodespec_client.rb'
+      CUSTOM_CLIENT_FILENAME = 'nodespec_chef_client.rb'
 
       def chef_apply_execute(snippet, options = [])
         execute_command("chef-apply #{options.join(' ')} -e #{snippet.shellescape}")
@@ -27,8 +27,9 @@ module NodeSpec
       end
 
       def chef_client_runlist(*args)
-        recipes = args.select {|a| a.is_a? String}
-        options = args.select {|a| a.is_a? Array}
+        recipes, options = [], []
+        recipes << args.take_while {|arg| arg.is_a? String}
+        options += args.last if args.last.is_a? Array
         if @custom_client_configuration
           execute_command("echo #{@custom_client_configuration.shellescape} > #{CUSTOM_CLIENT_FILENAME}")
           options << "-c #{CUSTOM_CLIENT_FILENAME}"

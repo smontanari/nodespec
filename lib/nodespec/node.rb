@@ -5,7 +5,6 @@ require 'nodespec/backends'
 
 module NodeSpec
   class Node
-    include VerboseOutput
     attr_reader :os, :remote_connection, :name
 
     def initialize(node_name, options = nil)
