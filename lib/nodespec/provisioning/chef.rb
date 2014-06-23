@@ -7,6 +7,7 @@ module NodeSpec
 
       def initialize(node)
         @node = node
+        @custom_client_configuration = ""
       end
 
       def chef_apply_execute(snippet, options = [])
@@ -20,19 +21,19 @@ module NodeSpec
       def set_cookbook_paths(*paths)
         unless paths.empty?
           paths_in_quotes = paths.map {|p| "'#{p}'"}
-          (@custom_client_configuration ||= "") << %Q(cookbook_path [#{paths_in_quotes.join(",")}])
+          @custom_client_configuration << %Q(cookbook_path [#{paths_in_quotes.join(",")}])
         end
       end
 
       def chef_client_config(text)
-        (@custom_client_configuration ||= "") << text
+        @custom_client_configuration << text
       end
 
       def chef_client_runlist(*args)
         recipes, options = [], []
         recipes << args.take_while {|arg| arg.is_a? String}
         options += args.last if args.last.is_a? Array
-        if @custom_client_configuration
+        unless @custom_client_configuration.empty?
           @node.execute_command("echo #{@custom_client_configuration.shellescape} > #{CUSTOM_CLIENT_FILENAME}")
           options << "-c #{CUSTOM_CLIENT_FILENAME}"
         end
