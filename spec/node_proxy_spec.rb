@@ -11,5 +11,12 @@ module NodeSpec
 
       subject.execute_command('command')
     end
+
+    it "returns the node remote_connection" do
+      NodeSpec.stub(current_node: node)
+      node.stub(remote_connection: 'connection')
+
+      expect(subject.remote_connection).to eq('connection')
+    end
   end
 end

@@ -6,10 +6,11 @@ require 'nodespec/backends'
 module NodeSpec
   class Node
     include VerboseOutput
-    attr_reader :os, :remote_connection
+    attr_reader :os, :remote_connection, :name
 
     def initialize(node_name, options = nil)
       options = (options || {}).dup
+      @name = node_name
       @os = options.delete('os')
       adapter_name = options.delete('adapter')
       if adapter_name

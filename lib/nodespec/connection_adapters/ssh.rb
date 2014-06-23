@@ -6,8 +6,8 @@ module NodeSpec
     class Ssh
       attr_reader :connection
 
-      def initialize(node_description, options = {})
-        host = options['host'] || node_description
+      def initialize(node_name, options = {})
+        host = options['host'] || node_name
         ssh_options = Net::SSH.configuration_for(host)
         user = options['username'] || ssh_options[:user]
         %w[port password keys].each do |param|

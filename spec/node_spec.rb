@@ -40,6 +40,11 @@ module NodeSpec
       Node.new('test_node', {'os' => 'test', 'foo' => 'bar'}.freeze)
     end
 
+    it 'returns the node name' do
+      subject = Node.new('test_node', {'os' => 'test', 'foo' => 'bar'})
+      expect(subject.name).to eq('test_node')
+    end
+
     context 'no options' do
       let(:subject) {Node.new('test_node')}
       

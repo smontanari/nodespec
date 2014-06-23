@@ -8,7 +8,7 @@ module NodeSpec
         Net::SSH.stub(configuration_for: {})
       end
 
-      context 'host name from the node description' do
+      context 'host name from the node name' do
         let(:subject) {Ssh.new('test.host.name', 'port' => 1234, 'username' => 'testuser', 'password' => 'testpassword')}
         include_examples 'valid_ssh_connection', 'test.host.name', 'testuser', {port: 1234, password: 'testpassword'}
       end

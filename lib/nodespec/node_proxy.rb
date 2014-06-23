@@ -1,7 +1,7 @@
 module NodeSpec
   module NodeProxy
-    def execute_command(command)
-      NodeSpec.current_node.execute_command(command)
+    [:execute_command, :remote_connection].each do |m|
+      define_method(m) {|*args| NodeSpec.current_node.send(m, *args)}
     end
   end
 end

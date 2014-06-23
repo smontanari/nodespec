@@ -13,14 +13,14 @@ module NodeSpec
       @predefined_settings = data || {}
     end
 
-    def get(node_description, options = nil)
+    def get(node_name, options = nil)
       if options.is_a? String
         raise "Cannot find nodespec settings '#{options}'" unless @predefined_settings.key?(options)
         opts = @predefined_settings[options]
       else
         opts = options
       end
-      Node.new(node_description, opts)
+      Node.new(node_name, opts)
     end
   end
 end
