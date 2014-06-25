@@ -8,11 +8,11 @@ module NodeSpec
       end
 
       def execute_file(path)
-        @node.execute_command(path)
+        @node.execute(path)
       end
 
       def execute_script(script)
-        @node.execute_command("sh -c #{script.shellescape}")
+        @node.execute("sh -c #{script.shellescape}")
       end
     end
   end

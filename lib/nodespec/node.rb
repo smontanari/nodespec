@@ -4,6 +4,7 @@ require 'nodespec/backends'
 
 module NodeSpec
   class Node
+    WORKING_DIR = '.nodespec'
     attr_reader :os, :remote_connection, :name
 
     def initialize(node_name, options = nil)
@@ -25,17 +26,26 @@ module NodeSpec
       end
     end
 
-    def execute_command(command)
-      command_helper.execute(command)
+    [:create_directory, :create_file].each do |met|
+      define_method(met) do |*args|
+        path_argument = args.shift
+        path = path_argument.start_with?('/') ? path_argument : "#{WORKING_DIR}/#{path_argument}"
+        backend_proxy.send(met, path, *args)
+        path
+      end
+    end
+
+    def execute(command)
+      backend_proxy.execute(command)
     end
 
     private
 
-    def command_helper
-      @command_helper ||= init_command_helper
+    def backend_proxy
+      @backend_proxy ||= init_backend_proxy
     end
 
-    def init_command_helper
+    def init_backend_proxy
       if @remote_connection
         BackendProxy.const_get(remote_backend).new(@remote_connection.session)
       else

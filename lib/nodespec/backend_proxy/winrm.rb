@@ -2,9 +2,7 @@ require 'nodespec/command_execution'
 
 module NodeSpec
   module BackendProxy
-    class WinRM
-      include CommandExecution
-
+    class WinRM < Base
       def initialize(winrm)
         @winrm_session = winrm
       end

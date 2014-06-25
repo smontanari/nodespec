@@ -3,10 +3,10 @@ require 'nodespec/backend_proxy/ssh'
 module NodeSpec
   module BackendProxy
     describe Ssh do
-      shared_examples 'an ssh session command run' do |user, original_command, actual_command|
-        let(:ssh_session) { double('ssh session') }
-        let(:subject) {Ssh.new(ssh_session)}
+      let(:ssh_session) { double('ssh session') }
+      let(:subject) {Ssh.new(ssh_session)}
 
+      shared_examples 'an ssh session command run' do |user, original_command, actual_command|
         before do
           ssh_session.stub(options: {user: user})
           allow(subject).to receive(:execute_within_timeout).with(actual_command).and_yield

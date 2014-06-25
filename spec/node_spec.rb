@@ -11,11 +11,31 @@ module NodeSpec
       end
     end
 
-    shared_examples 'run command' do |helper|
-      it "has runs a command through a command helper" do
+    shared_examples 'run commands' do |helper|
+      it "runs a command through the command helper" do
         expect(backend_proxy[helper]).to receive(:execute).with('test command')
         
-        subject.execute_command('test command')
+        subject.execute('test command')
+      end
+      it "creates a directory with a path relative to the node working directory" do
+        expect(backend_proxy[helper]).to receive(:create_directory).with('.nodespec/test_dir')
+        
+        expect(subject.create_directory('test_dir')).to eq('.nodespec/test_dir')
+      end
+      it "writes to a file with a path relative to the node working directory" do
+        expect(backend_proxy[helper]).to receive(:create_file).with('.nodespec/test/file', 'test content')
+        
+        expect(subject.create_file('test/file', 'test content')).to eq('.nodespec/test/file')
+      end
+      it "creates a directory with an absolute path" do
+        expect(backend_proxy[helper]).to receive(:create_directory).with('/test/dir')
+        
+        expect(subject.create_directory('/test/dir')).to eq('/test/dir')
+      end
+      it "writes to a file with an absolute path" do
+        expect(backend_proxy[helper]).to receive(:create_file).with('/test/file', 'test content')
+        
+        expect(subject.create_file('/test/file', 'test content')).to eq('/test/file')
       end
     end
 
@@ -49,21 +69,21 @@ module NodeSpec
       let(:subject) {Node.new('test_node')}
       
       include_examples 'node_attributes', {os: nil, backend: 'Exec', remote_connection: nil}
-      include_examples 'run command', :exec_helper
+      include_examples 'run commands', :exec_helper
     end
 
     context 'options with unix-like os' do
       let(:subject) {Node.new('test_node', 'os' => 'Solaris')}
       
       include_examples 'node_attributes', {os: 'Solaris', backend: 'Exec', remote_connection: nil}
-      include_examples 'run command', :exec_helper
+      include_examples 'run commands', :exec_helper
     end
 
     context 'options with windows os' do
       let(:subject) {Node.new('test_node', 'os' => 'Windows')}
 
       include_examples 'node_attributes', {os: 'Windows', backend: 'Cmd', remote_connection: nil}
-      include_examples 'run command', :cmd_helper
+      include_examples 'run commands', :cmd_helper
     end
 
     context 'options with adapter' do
@@ -79,21 +99,21 @@ module NodeSpec
         let(:subject) {Node.new('test_node', 'adapter' => 'test_adapter', 'foo' => 'bar')}
 
         include_examples 'node_attributes', {os: nil, backend: 'Ssh', remote_connection: true}
-        include_examples 'run command', :ssh_helper
+        include_examples 'run commands', :ssh_helper
       end
 
       context 'unix-like os given' do
         let(:subject) {Node.new('test_node', 'os' => 'Solaris', 'adapter' => 'test_adapter', 'foo' => 'bar')}
 
         include_examples 'node_attributes', {os: 'Solaris', backend: 'Ssh', remote_connection: true}
-        include_examples 'run command', :ssh_helper
+        include_examples 'run commands', :ssh_helper
       end
 
       context 'windows os given' do
         let(:subject) {Node.new('test_node', 'os' => 'Windows', 'adapter' => 'test_adapter', 'foo' => 'bar')}
 
         include_examples 'node_attributes', {os: 'Windows', backend: 'WinRM', remote_connection: true}
-        include_examples 'run command', :winrm_helper
+        include_examples 'run commands', :winrm_helper
       end
     end
   end

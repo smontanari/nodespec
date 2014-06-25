@@ -31,11 +31,14 @@ module NodeSpec
       end
 
       describe 'setting hiera data' do
+        before do
+          expect(current_node).to receive(:create_directory).with('puppet_hieradata').ordered.and_return('config/puppet_hieradata')
+          expect(current_node).to receive(:create_file).with('puppet_hieradata/nodespec_current.yaml', "---\ntest: hiera data\n").ordered.and_return('config/puppet_hieradata/nodespec_current.yaml')
+          expect(current_node).to receive(:create_file).with('puppet_hiera.yaml', ":backends:\n  - yaml\n:yaml:\n  :datadir: config/puppet_hieradata\n:hierarchy:\n  - nodespec_current\n").ordered.and_return('config/puppet_hiera.yaml')
+        end
+
         it_executes_the_node_command(
-          'mkdir -p nodespec_puppet_hieradata',
-          %Q[sh -c "echo ---'\n'test:\\ hiera\\ data'\n' > nodespec_puppet_hieradata/nodespec_current.yaml"],
-          %Q[sh -c "echo :backends:'\n'\\ \\ -\\ yaml'\n':yaml:'\n'\\ \\ :datadir:\\ nodespec_puppet_hieradata'\n':hierarchy:'\n'\\ \\ -\\ nodespec_current'\n' > nodespec_puppet_hiera.yaml"],
-          'puppet apply --modulepath /test/module/path --hiera_config nodespec_puppet_hiera.yaml --opts /test/path/to/manifest'
+          'puppet apply --modulepath /test/module/path --hiera_config config/puppet_hiera.yaml --opts /test/path/to/manifest'
         ) do
           set_modulepaths '/test/module/path'
           set_hieradata('test' => 'hiera data')

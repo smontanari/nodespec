@@ -1,14 +1,15 @@
 require 'open3'
 require 'nodespec/run_options'
-require 'nodespec/command_execution'
+require_relative 'base'
+require_relative 'unixshell_utility'
 
 module NodeSpec
   module BackendProxy
-    class Exec
-      include CommandExecution
+    class Exec < Base
+      include UnixshellUtility
 
       def execute command
-        command = "sudo #{command}" if NodeSpec::RunOptions.run_local_with_sudo?
+        command = run_as_sudo(command) if NodeSpec::RunOptions.run_local_with_sudo?
         execute_within_timeout(command) do
           output, status = Open3.capture2e(command)
           verbose_puts(output)

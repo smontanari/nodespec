@@ -20,22 +20,25 @@ module NodeSpec
         end
 
         context 'custom configuration' do
+          before do
+            expect(current_node).to receive(:create_file).with('chef_client.rb', 'test config').ordered.and_return('config/chef_client.rb')
+          end
+
           it_executes_the_node_command(
-            /echo[\\ ]+http_proxy\\ \\\"http:\/\/proxy\.test\.com:3128\\\"'\n'[\\ ]+log_level\\ :info'\n' > nodespec_chef_client.rb/,
-            'chef-client -z --opt1 --opt2 -c nodespec_chef_client.rb -o recipe1,recipe2'
+            'chef-client -z --opt1 --opt2 -c config/chef_client.rb -o recipe1,recipe2'
           ) do
-            chef_client_config <<-EOS
-              http_proxy "http://proxy.test.com:3128"
-              log_level :info
-            EOS
+            chef_client_config 'test config'
             chef_client_runlist 'recipe1', 'recipe2', %w[--opt1 --opt2]
           end
         end
 
         context 'custom cookbook path' do
+          before do
+            expect(current_node).to receive(:create_file).with('chef_client.rb', "cookbook_path ['/var/chef/cookbooks','/var/chef/site-cookbooks']").ordered.and_return('config/chef_client.rb')
+          end
+
           it_executes_the_node_command(
-            'echo cookbook_path\ \[\\\'/var/chef/cookbooks\\\',\\\'/var/chef/site-cookbooks\\\'\] > nodespec_chef_client.rb',
-            'chef-client -z --opt1 --opt2 -c nodespec_chef_client.rb -o recipe1,recipe2'
+            'chef-client -z --opt1 --opt2 -c config/chef_client.rb -o recipe1,recipe2'
           ) do
             set_cookbook_paths '/var/chef/cookbooks', '/var/chef/site-cookbooks'
 

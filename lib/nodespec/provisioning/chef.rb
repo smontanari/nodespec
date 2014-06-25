@@ -3,41 +3,41 @@ require 'shellwords'
 module NodeSpec
   module Provisioning
     class Chef
-      CUSTOM_CLIENT_FILENAME = 'nodespec_chef_client.rb'
+      CUSTOM_CLIENT_FILENAME = 'chef_client.rb'
 
       def initialize(node)
         @node = node
-        @custom_client_configuration = ""
+        @configuration_entries = []
       end
 
       def chef_apply_execute(snippet, options = [])
-        @node.execute_command("chef-apply #{options.join(' ')} -e #{snippet.shellescape}")
+        @node.execute("chef-apply #{options.join(' ')} -e #{snippet.shellescape}")
       end
 
       def chef_apply_recipe(recipe_file, options = [])
-        @node.execute_command("chef-apply #{recipe_file.shellescape} #{options.join(' ')}")
+        @node.execute("chef-apply #{recipe_file.shellescape} #{options.join(' ')}")
       end
 
       def set_cookbook_paths(*paths)
         unless paths.empty?
           paths_in_quotes = paths.map {|p| "'#{p}'"}
-          @custom_client_configuration << %Q(cookbook_path [#{paths_in_quotes.join(",")}])
+          @configuration_entries << %Q(cookbook_path [#{paths_in_quotes.join(",")}])
         end
       end
 
       def chef_client_config(text)
-        @custom_client_configuration << text
+        @configuration_entries << text
       end
 
       def chef_client_runlist(*args)
         recipes, options = [], []
         recipes << args.take_while {|arg| arg.is_a? String}
         options += args.last if args.last.is_a? Array
-        unless @custom_client_configuration.empty?
-          @node.execute_command("echo #{@custom_client_configuration.shellescape} > #{CUSTOM_CLIENT_FILENAME}")
-          options << "-c #{CUSTOM_CLIENT_FILENAME}"
+        unless @configuration_entries.empty?
+          config_file = @node.create_file(CUSTOM_CLIENT_FILENAME, @configuration_entries.join("\n"))
+          options << "-c #{config_file}"
         end
-        @node.execute_command("chef-client -z #{options.join(' ')} -o #{recipes.join(',').shellescape}")
+        @node.execute("chef-client -z #{options.join(' ')} -o #{recipes.join(',').shellescape}")
       end
     end
   end

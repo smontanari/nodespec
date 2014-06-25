@@ -4,14 +4,17 @@ require 'shellwords'
 module NodeSpec
   module Provisioning
     class Puppet
-      HIERA_CONFIG = <<-eos
+      HIERADATA_DIRNAME = 'puppet_hieradata'
+      HIERA_CONFIG_FILENAME = 'puppet_hiera.yaml'
+      HIERA_CONFIG_CURRENT_NODE = 'nodespec_current'
+      HIERA_CONFIG_TEMPLATE = <<-EOS
 :backends:
   - yaml
 :yaml:
-  :datadir: nodespec_puppet_hieradata
+  :datadir: <%= hieradata_dir%>
 :hierarchy:
-  - nodespec_current
-eos
+  - #{HIERA_CONFIG_CURRENT_NODE}
+EOS
       def initialize(node)
         @node = node
       end
@@ -26,24 +29,22 @@ eos
 
       def set_hieradata(values)
         unless values.empty?
-          @node.execute_command 'mkdir -p nodespec_puppet_hieradata'
-          @node.execute_command %Q[sh -c "echo #{YAML.dump(values).shellescape} > nodespec_puppet_hieradata/nodespec_current.yaml"]
-          @node.execute_command %Q[sh -c "echo #{HIERA_CONFIG.shellescape} > nodespec_puppet_hiera.yaml"]
-          @hiera_option = '--hiera_config nodespec_puppet_hiera.yaml'
+          hieradata_dir = @node.create_directory(HIERADATA_DIRNAME)
+          @node.create_file("#{HIERADATA_DIRNAME}/#{HIERA_CONFIG_CURRENT_NODE}.yaml", YAML.dump(values))
+          hiera_config = @node.create_file(HIERA_CONFIG_FILENAME, ERB.new(HIERA_CONFIG_TEMPLATE).result(binding))
+          @hiera_option = "--hiera_config #{hiera_config}"
         end
       end
 
       def puppet_apply_execute(snippet, options = [])
-        @node.execute_command("#{group_command_options(options)} -e #{snippet.shellescape}")
+        @node.execute("#{group_command_options(options)} -e #{snippet.shellescape}")
       end
 
       def puppet_apply_manifest(manifest_file, options = [])
-        @node.execute_command("#{group_command_options(options)} #{manifest_file.shellescape}")
+        @node.execute("#{group_command_options(options)} #{manifest_file.shellescape}")
       end
 
       private
-
-
 
       def group_command_options(options)
         %Q[#{@facts}puppet apply #{@modulepath_option} #{@hiera_option} #{options.join(' ')}]
