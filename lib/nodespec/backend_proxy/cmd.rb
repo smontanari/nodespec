@@ -1,5 +1,5 @@
 module NodeSpec
-  module NodeCommandHelpers
+  module BackendProxy
     class Cmd
       def execute command
         raise 'Not supported yet'

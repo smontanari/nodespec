@@ -3,7 +3,7 @@ require_relative 'verbose_output'
 require_relative 'run_options'
 
 module NodeSpec
-  module TimeoutExecution
+  module CommandExecution
     include VerboseOutput
 
     def execute_within_timeout(command, timeout = NodeSpec::RunOptions.command_timeout, &block)

@@ -1,8 +1,8 @@
-require 'nodespec/timeout_execution'
+require 'nodespec/command_execution'
 
 module NodeSpec
-  describe TimeoutExecution do
-    let(:subject) {Object.new.extend TimeoutExecution}
+  describe CommandExecution do
+    let(:subject) {Object.new.extend CommandExecution}
     
     it 'does not raise an error if the command succeeds' do
       subject.execute_within_timeout('test command') { true }

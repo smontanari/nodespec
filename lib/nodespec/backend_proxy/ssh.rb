@@ -1,9 +1,9 @@
-require 'nodespec/timeout_execution'
+require 'nodespec/command_execution'
 
 module NodeSpec
-  module NodeCommandHelpers
+  module BackendProxy
     class Ssh
-      include TimeoutExecution
+      include CommandExecution
       ROOT_USER = 'root'
 
       def initialize(ssh)

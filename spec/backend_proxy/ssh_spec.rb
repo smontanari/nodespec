@@ -1,7 +1,7 @@
-require 'nodespec/node_command_helpers/ssh'
+require 'nodespec/backend_proxy/ssh'
 
 module NodeSpec
-  module NodeCommandHelpers
+  module BackendProxy
     describe Ssh do
       shared_examples 'an ssh session command run' do |user, original_command, actual_command|
         let(:ssh_session) { double('ssh session') }

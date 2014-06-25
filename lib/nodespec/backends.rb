@@ -1,4 +1,5 @@
 require 'specinfra/helper'
+%w[exec cmd ssh winrm].each {|f| require_relative "backend_proxy/#{f}"}
 
 module NodeSpec
   module Backends

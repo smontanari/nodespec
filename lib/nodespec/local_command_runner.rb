@@ -1,10 +1,10 @@
 require 'open3'
 require 'nodespec/run_options'
-require 'nodespec/timeout_execution'
+require 'nodespec/command_execution'
 
 module NodeSpec
   module LocalCommandRunner
-    include TimeoutExecution
+    include CommandExecution
 
     def run_command command
       execute_within_timeout(command) do

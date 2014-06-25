@@ -1,9 +1,9 @@
-require 'nodespec/timeout_execution'
+require 'nodespec/command_execution'
 
 module NodeSpec
-  module NodeCommandHelpers
+  module BackendProxy
     class WinRM
-      include TimeoutExecution
+      include CommandExecution
 
       def initialize(winrm)
         @winrm_session = winrm

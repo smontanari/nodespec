@@ -1,11 +1,11 @@
 require 'open3'
 require 'nodespec/run_options'
-require 'nodespec/timeout_execution'
+require 'nodespec/command_execution'
 
 module NodeSpec
-  module NodeCommandHelpers
+  module BackendProxy
     class Exec
-      include TimeoutExecution
+      include CommandExecution
 
       def execute command
         command = "sudo #{command}" if NodeSpec::RunOptions.run_local_with_sudo?

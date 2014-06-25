@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'nodespec/node_command_helpers/exec'
+require 'nodespec/backend_proxy/exec'
 
 module NodeSpec
-  module NodeCommandHelpers
+  module BackendProxy
     describe Exec do
       shared_examples 'a command run' do |original_command, actual_command, sudo_option|
         let(:cmd_status) { double('status') }

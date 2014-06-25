@@ -1,7 +1,7 @@
-require 'nodespec/node_command_helpers/winrm'
+require 'nodespec/backend_proxy/winrm'
 
 module NodeSpec
-  module NodeCommandHelpers
+  module BackendProxy
     describe WinRM do
       let(:winrm) { double('winrm session') }
       let(:subject) {WinRM.new(winrm)}
