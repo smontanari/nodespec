@@ -1,5 +1,6 @@
 require 'yaml'
 require 'shellwords'
+require 'erb'
 
 module NodeSpec
   module Provisioning
@@ -11,7 +12,7 @@ module NodeSpec
 :backends:
   - yaml
 :yaml:
-  :datadir: <%= hieradata_dir%>
+  :datadir: <%= hieradata_dir %>
 :hierarchy:
   - #{HIERA_CONFIG_CURRENT_NODE}
 EOS

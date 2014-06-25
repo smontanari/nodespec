@@ -7,7 +7,9 @@ module NodeSpec
       describe 'executing an ansible module' do
         before do
           current_node.stub(name: 'test_host')
+          current_node.stub_chain(:remote_connection, :session, :host).and_return('test.host')
           current_node.stub_chain(:remote_connection, :session, :options).and_return({
+            port: 1234,
             user: 'test_user',
             keys: 'path/to user/key'
           })
@@ -25,23 +27,23 @@ module NodeSpec
           end
         end
 
-        describe 'setting the inventory' do
+        describe 'setting a path to an inventory' do
           it_executes_the_local_command(/ansible test_host .* -i path\/to\\ custom\/hosts .*/) do
             set_hostfile_path 'path/to custom/hosts'
             ansible_execute_module 'module', 'module arguments', %w[--opt1 --opt2]
           end
 
-          describe 'inline custom inventory' do
+          describe 'enabling inventory self host detection' do
             let(:inventory_file) {double('inventory file')}
             before do
               Tempfile.stub(:new).with('nodespec_ansible_hosts').and_return(inventory_file)
               allow(inventory_file).to receive(:path).and_return('/path/to/inventory')
               allow(inventory_file).to receive(:flush)
-              expect(inventory_file).to receive(:write).with('test inventory')
+              expect(inventory_file).to receive(:write).with('test_host ansible_ssh_port=1234 ansible_ssh_host=test.host')
             end
 
             it_executes_the_local_command(/ansible test_host .* -i \/path\/to\/inventory .*/) do
-              ansible_inventory 'test inventory'
+              enable_host_auto_discovery
               ansible_execute_module 'module', 'module arguments', %w[--opt1 --opt2]
             end
           end
