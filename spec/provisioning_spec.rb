@@ -18,8 +18,8 @@ module NodeSpec
         allow(clazz).to receive(:new).with('current node').once.and_return(provisioner_instance)
         expect(provisioner_instance).to receive(:instance_eval).twice
 
-        subject.send("node_provision_with_#{name}", &provisioning_block)
-        subject.send("node_provision_with_#{name}", &provisioning_block)
+        subject.send("provision_node_with_#{name}", &provisioning_block)
+        subject.send("provision_node_with_#{name}", &provisioning_block)
       end
 
       it "executes the #{clazz} command" do
@@ -28,7 +28,7 @@ module NodeSpec
           expect(b).to be provisioning_block
         end
 
-        subject.send("node_provision_with_#{name}", &provisioning_block)
+        subject.send("provision_node_with_#{name}", &provisioning_block)
       end
     end
   end
