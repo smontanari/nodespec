@@ -1,7 +1,7 @@
 require 'open3'
 
 module NodeSpec
-  module Adapters
+  module ConnectionAdapters
     class Vagrant
       attr_reader :connection
       

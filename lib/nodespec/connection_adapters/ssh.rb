@@ -2,7 +2,7 @@ require 'net/ssh'
 require 'nodespec/ssh_connection'
 
 module NodeSpec
-  module Adapters
+  module ConnectionAdapters
     class Ssh
       attr_reader :connection
 

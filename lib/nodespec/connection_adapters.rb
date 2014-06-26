@@ -1,8 +1,7 @@
-Dir[File.join(File.dirname(__FILE__), 'connection_adapters/*.rb')].each {|f| require f}
-
 module NodeSpec
   module ConnectionAdapters
     def self.get(node_name, adapter_name, adapter_options)
+      require_relative "connection_adapters/#{adapter_name}.rb"
       clazz = adapter_class(adapter_name)
       clazz.new(node_name, adapter_options)
     end
@@ -11,7 +10,7 @@ module NodeSpec
 
     def self.adapter_class(name)
       adapter_classname = name.split('_').map(&:capitalize).join('')
-      Adapters.const_get(adapter_classname)
+      self.const_get(adapter_classname)
     end
   end
 end

@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'nodespec/connection_adapters/vagrant'
 
 module NodeSpec
-  module Adapters
+  module ConnectionAdapters
     describe Vagrant do
       [['test_vm'], ['test_node', {'vm_name' => 'test_vm'}]].each do |args|
         describe "initialization" do

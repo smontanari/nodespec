@@ -1,21 +1,19 @@
 require 'nodespec/connection_adapters'
+%w[vagrant ssh amazon_ec2].each {|f| require "nodespec/connection_adapters/#{f}"}
 
 module NodeSpec
   describe ConnectionAdapters do
-    it "returns a Vagrant adapter" do
-      expect(Adapters::Vagrant).to receive(:new).with('test_node', 'adapter_options' => 'test_options').and_return('adapter')
+    {
+      'vagrant'    => ConnectionAdapters::Vagrant,
+      'ssh'        => ConnectionAdapters::Ssh,
+      'amazon_ec2' => ConnectionAdapters::AmazonEc2
+    }.each do |adapter_name, adapter_class|
+      it "returns an instance of #{adapter_class}" do
+        expect(adapter_class).to receive(:new).with('test_node', 'adapter_options' => 'test_options').and_return('adapter')
+        adapter = ConnectionAdapters.get('test_node', adapter_name, 'adapter_options' => 'test_options')
 
-      adapter = ConnectionAdapters.get('test_node', 'vagrant', 'adapter_options' => 'test_options')
-
-      expect(adapter).to eq('adapter')
-    end
-
-    it "returns a Ssh adapter" do
-      expect(Adapters::Ssh).to receive(:new).with('test_node', 'adapter_options' => 'test_options').and_return('adapter')
-
-      adapter = ConnectionAdapters.get('test_node', 'ssh', 'adapter_options' => 'test_options')
-
-      expect(adapter).to eq('adapter')
+        expect(adapter).to eq('adapter')
+      end
     end
   end
 end

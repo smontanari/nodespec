@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'nodespec/connection_adapters/ssh'
 
 module NodeSpec
-  module Adapters
+  module ConnectionAdapters
     describe Ssh do
       before do
         allow(Net::SSH).to receive(:configuration_for).and_return({})
