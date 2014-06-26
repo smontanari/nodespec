@@ -19,7 +19,7 @@ module NodeSpec
                 keys: 'path/to user/key'
               })
             end
-            it_executes_the_local_command('ansible test_host -m module -a module\ arguments -u test_user --private-key=path/to\ user/key --opt1 --opt2') do
+            it_executes_the_local_command('ansible test_host -m module -a module\ arguments -u test_user --private-key=path/to\ user/key --sudo --opt1 --opt2') do
               ansible_execute_module 'module', 'module arguments', %w[--opt1 --opt2]
             end
           end
@@ -31,8 +31,46 @@ module NodeSpec
                 keys: ['path/to user/key1', 'path/to user/key2']
               })
             end
-            it_executes_the_local_command('ansible-playbook /path\ to/playbook -l test_host -u test_user --private-key=path/to\ user/key1,path/to\ user/key2 --opt1 --opt2') do
+            it_executes_the_local_command('ansible-playbook /path\ to/playbook -l test_host -u test_user --private-key=path/to\ user/key1,path/to\ user/key2 --sudo --opt1 --opt2') do
               ansible_execute_playbook '/path to/playbook', %w[--opt1 --opt2]
+            end
+          end
+
+          context 'disable sudo' do
+            before do
+              allow(current_node).to receive_message_chain(:remote_connection, :session, :options).and_return({
+                user: 'test_user',
+                keys: 'path/to user/key'
+              })
+            end
+            it_executes_the_local_command('ansible test_host -m module -a module\ arguments -u test_user --private-key=path/to\ user/key --opt1 --opt2') do
+              run_as_sudo(false)
+              ansible_execute_module 'module', 'module arguments', %w[--opt1 --opt2]
+            end
+          end
+
+          context 'enable sudo' do
+            before do
+              allow(current_node).to receive_message_chain(:remote_connection, :session, :options).and_return({
+                user: 'test_user',
+                keys: 'path/to user/key'
+              })
+            end
+            it_executes_the_local_command('ansible test_host -m module -a module\ arguments -u test_user --private-key=path/to\ user/key --sudo --opt1 --opt2') do
+              run_as_sudo
+              ansible_execute_module 'module', 'module arguments', %w[--opt1 --opt2]
+            end
+          end
+
+          context 'runs as root without sudo' do
+            before do
+              allow(current_node).to receive_message_chain(:remote_connection, :session, :options).and_return({
+                user: 'root',
+                keys: 'path/to user/key'
+              })
+            end
+            it_executes_the_local_command('ansible test_host -m module -a module\ arguments -u root --private-key=path/to\ user/key --opt1 --opt2') do
+              ansible_execute_module 'module', 'module arguments', %w[--opt1 --opt2]
             end
           end
         end

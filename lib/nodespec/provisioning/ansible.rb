@@ -16,6 +16,7 @@ EOS
 
       def initialize(node)
         @node = node
+        @sudo_enabled = true
         @cmd_prefix_entries = []
       end
 
@@ -41,6 +42,10 @@ EOS
         @cmd_prefix_entries << "ANSIBLE_HOST_KEY_CHECKING=#{enabled.to_s.capitalize}"
       end
 
+      def run_as_sudo(enabled = true)
+        @sudo_enabled = enabled
+      end
+
       def ansible_execute_playbook(playbook_path, options = [])
         build_and_run("ansible-playbook #{playbook_path.shellescape} -l #{@node.name}", options)
       end
@@ -60,9 +65,14 @@ EOS
           @hostfile_option,
           "-u #{ssh_session.options[:user]}",
           "--private-key=#{key_option.shellescape}",
+          sudo_option(ssh_session.options[:user]),
           "#{options.join(' ')}"
           ].compact.join(' ')
           run_command(cmd)
+      end
+
+      def sudo_option(user)
+        '--sudo' if user != 'root' and @sudo_enabled
       end
 
       def create_temp_file(filename, content)

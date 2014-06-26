@@ -11,7 +11,7 @@ module NodeSpec
     it 'raises an error if the command fails' do
       expect {
         subject.execute_within_timeout('test command') { false }
-      }.to raise_error 'The command execution failed. Enable verbosity to check the output.'
+      }.to raise_error CommandExecution::CommandExecutionError
     end
 
     context 'custom timeout' do
