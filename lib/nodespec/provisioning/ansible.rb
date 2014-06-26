@@ -9,7 +9,10 @@ module NodeSpec
       include LocalCommandRunner
       CUSTOM_CONFIG_FILENAME = 'nodespec_ansible_cfg'
       CUSTOM_INVENTORY_FILENAME = 'nodespec_ansible_hosts'
-      AUTO_DISCOVERY_HOST_TEMPLATE = "<%= @node.name %> ansible_ssh_port=<%= @node.remote_connection.session.options[:port] %> ansible_ssh_host=<%= @node.remote_connection.session.host %>"
+      AUTO_DISCOVERY_HOST_TEMPLATE = <<-EOS
+<%= "[" + group + "]" if group %>
+<%= @node.name %> ansible_ssh_port=<%= @node.remote_connection.session.options[:port] %> ansible_ssh_host=<%= @node.remote_connection.session.host %>
+EOS
 
       def initialize(node)
         @node = node
@@ -25,7 +28,7 @@ module NodeSpec
         @cmd_prefix_entries << "ANSIBLE_CONFIG=#{file.path.shellescape}"
       end
 
-      def enable_host_auto_discovery
+      def enable_host_auto_discovery(group = nil)
         file = create_temp_file(CUSTOM_INVENTORY_FILENAME, ERB.new(AUTO_DISCOVERY_HOST_TEMPLATE).result(binding))
         @hostfile_option = "-i #{file.path.shellescape}"
       end
@@ -50,12 +53,13 @@ module NodeSpec
 
       def build_and_run(cmd, options = [])
         ssh_session = @node.remote_connection.session
+        key_option = ssh_session.options[:keys].is_a?(Array) ? ssh_session.options[:keys].join(',') : ssh_session.options[:keys]
         cmd = [
           (@cmd_prefix_entries.join(' ') unless @cmd_prefix_entries.empty?),
           cmd,
           @hostfile_option,
           "-u #{ssh_session.options[:user]}",
-          "--private-key=#{ssh_session.options[:keys].shellescape}",
+          "--private-key=#{key_option.shellescape}",
           "#{options.join(' ')}"
           ].compact.join(' ')
           run_command(cmd)

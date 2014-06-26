@@ -60,9 +60,25 @@ module NodeSpec
       Node.new('test_node', {'os' => 'test', 'foo' => 'bar'}.freeze)
     end
 
-    it 'returns the node name' do
-      subject = Node.new('test_node', {'os' => 'test', 'foo' => 'bar'})
-      expect(subject.name).to eq('test_node')
+    describe 'node name' do
+      it 'replaces spaces with hyphen' do
+        subject = Node.new('test node description')
+        expect(subject.name).to eq('test-node-description')
+      end
+      it 'trims spaces at the end' do
+        subject = Node.new("test.node.description  ")
+        expect(subject.name).to eq('test.node.description')
+      end
+      it 'cannot contain punctuation characters' do
+        "!@#$%^&*()+={}[]\\|:;\"'<>?,/".each_char do |invalid_char|
+          expect {Node.new("test #{invalid_char} name")}.to raise_error
+        end
+      end
+      it 'cannot start with space, underscore or hyphen characters' do
+        " _-".each_char do |invalid_char|
+          expect {Node.new("#{invalid_char} name")}.to raise_error
+        end
+      end
     end
 
     context 'no options' do

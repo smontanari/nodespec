@@ -33,8 +33,8 @@ module NodeSpec
       describe 'setting hiera data' do
         before do
           expect(current_node).to receive(:create_directory).with('puppet_hieradata').ordered.and_return('config/puppet_hieradata')
-          expect(current_node).to receive(:create_file).with('puppet_hieradata/nodespec_current.yaml', "---\ntest: hiera data\n").ordered.and_return('config/puppet_hieradata/nodespec_current.yaml')
-          expect(current_node).to receive(:create_file).with('puppet_hiera.yaml', ":backends:\n  - yaml\n:yaml:\n  :datadir: config/puppet_hieradata\n:hierarchy:\n  - nodespec_current\n").ordered.and_return('config/puppet_hiera.yaml')
+          expect(current_node).to receive(:create_file).with('puppet_hieradata/common.yaml', "---\ntest: hiera data\n").ordered.and_return('config/puppet_hieradata/common.yaml')
+          expect(current_node).to receive(:create_file).with('puppet_hiera.yaml', ":backends:\n  - yaml\n:yaml:\n  :datadir: config/puppet_hieradata\n:hierarchy:\n  - common\n").ordered.and_return('config/puppet_hiera.yaml')
         end
 
         it_executes_the_node_command(

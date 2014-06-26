@@ -34,7 +34,7 @@ module NodeSpec
 
       describe '#create_file' do
         it 'executes the generated command' do
-          subject.stub(:cmd_create_file).with('test/path', 'test content').and_return('command')
+          allow(subject).to receive(:cmd_create_file).with('test/path', 'test content').and_return('command')
           expect(subject).to receive(:execute).with('command')
 
           subject.create_file('test/path', 'test content')
@@ -43,7 +43,7 @@ module NodeSpec
 
       describe '#create_directory' do
         it 'executes the generated command' do
-          subject.stub(:cmd_create_directory).with('test/path').and_return('command')
+          allow(subject).to receive(:cmd_create_directory).with('test/path').and_return('command')
           expect(subject).to receive(:execute).with('command')
 
           subject.create_directory('test/path')

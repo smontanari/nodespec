@@ -4,12 +4,14 @@ require 'nodespec/backends'
 
 module NodeSpec
   class Node
+    class BadNodeNameError < StandardError; end
+
     WORKING_DIR = '.nodespec'
     attr_reader :os, :remote_connection, :name
 
     def initialize(node_name, options = nil)
+      @name = validate(node_name)
       options = (options || {}).dup
-      @name = node_name
       @os = options.delete('os')
       adapter_name = options.delete('adapter')
       if adapter_name
@@ -59,6 +61,11 @@ module NodeSpec
 
     def remote_backend
       @os == 'Windows' ? Backends::WinRM : Backends::Ssh
+    end
+
+    def validate(name)
+      raise BadNodeNameError.new unless name =~ /^[a-zA-Z0-9][a-zA-Z0-9. \-_]+\s*$/
+      name.strip.gsub(' ', '-')
     end
   end
 end

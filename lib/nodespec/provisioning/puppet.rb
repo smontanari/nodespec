@@ -7,14 +7,14 @@ module NodeSpec
     class Puppet
       HIERADATA_DIRNAME = 'puppet_hieradata'
       HIERA_CONFIG_FILENAME = 'puppet_hiera.yaml'
-      HIERA_CONFIG_CURRENT_NODE = 'nodespec_current'
+      HIERA_DEFAULT_HIERARCHY = 'common'
       HIERA_CONFIG_TEMPLATE = <<-EOS
 :backends:
   - yaml
 :yaml:
   :datadir: <%= hieradata_dir %>
 :hierarchy:
-  - #{HIERA_CONFIG_CURRENT_NODE}
+  - #{HIERA_DEFAULT_HIERARCHY}
 EOS
       def initialize(node)
         @node = node
@@ -31,7 +31,7 @@ EOS
       def set_hieradata(values)
         unless values.empty?
           hieradata_dir = @node.create_directory(HIERADATA_DIRNAME)
-          @node.create_file("#{HIERADATA_DIRNAME}/#{HIERA_CONFIG_CURRENT_NODE}.yaml", YAML.dump(values))
+          @node.create_file("#{HIERADATA_DIRNAME}/#{HIERA_DEFAULT_HIERARCHY}.yaml", YAML.dump(values))
           hiera_config = @node.create_file(HIERA_CONFIG_FILENAME, ERB.new(HIERA_CONFIG_TEMPLATE).result(binding))
           @hiera_option = "--hiera_config #{hiera_config}"
         end
