@@ -3,8 +3,8 @@ require 'nodespec/node_configurations'
 module NodeSpec
   describe NodeConfigurations do
     before do
-      File.stub(exists?: true)
-      YAML.stub(:load_file).and_return({
+      allow(File).to receive(:exists?).and_return(true)
+      allow(YAML).to receive(:load_file).and_return({
         'test_node1' => { foo: 'bar' },
         'test_node2' => { foo: 'baz' },
         'test_node3' => { foo: 'qaz' }

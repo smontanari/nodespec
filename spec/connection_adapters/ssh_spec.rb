@@ -5,7 +5,7 @@ module NodeSpec
   module Adapters
     describe Ssh do
       before do
-        Net::SSH.stub(configuration_for: {})
+        allow(Net::SSH).to receive(:configuration_for).and_return({})
       end
 
       context 'host name from the node name' do

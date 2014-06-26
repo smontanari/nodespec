@@ -7,7 +7,7 @@ module NodeSpec
     let(:provisioning_block) {Proc.new {}}
     
     before do
-      NodeSpec.stub(current_node: 'current node')
+      allow(NodeSpec).to receive(:current_node).and_return('current node')
     end
     
     {

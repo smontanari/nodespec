@@ -13,7 +13,7 @@ module NodeSpec
 
     describe '#bind' do
       shared_examples 'new session' do
-        before {rspec_configuration.stub(:ssh).and_return(nil, nil, 'new session')}
+        before {allow(rspec_configuration).to receive(:ssh).and_return(nil, nil, 'new session')}
 
         it 'starts a new ssh session in the rspec configuration ' do
           expect(rspec_configuration).to receive(:ssh=).with('new session')
@@ -36,12 +36,12 @@ module NodeSpec
 
       context 'different or no hostname' do
         [nil, 'another host'].each do |current_hostname|
-          before { rspec_configuration.stub(host: current_hostname) }
+          before { allow(rspec_configuration).to receive(:host).and_return(current_hostname) }
 
           it 'closes an existing ssh session' do
-            rspec_configuration.stub(ssh: ssh_session)
+            allow(rspec_configuration).to receive(:ssh).and_return(ssh_session)
             expect(ssh_session).to receive(:close)
-            ssh_session.stub(closed?: true)
+            allow(ssh_session).to receive(:closed?).and_return(true)
 
             subject.bind(rspec_configuration)
           end
@@ -51,17 +51,17 @@ module NodeSpec
       end
 
       context 'same hostname' do
-        before { rspec_configuration.stub(host: 'test host') }
+        before { allow(rspec_configuration).to receive(:host).and_return('test host') }
 
         context 'no session' do
           include_examples 'new session'
         end
 
         context 'existing session' do
-          before { rspec_configuration.stub(ssh: ssh_session) }
+          before { allow(rspec_configuration).to receive(:ssh).and_return(ssh_session) }
         
           context 'open session' do
-            before { ssh_session.stub(closed?: false) }
+            before { allow(ssh_session).to receive(:closed?).and_return(false) }
 
             it 'does not change the current rspec configuration' do
               expect(Net::SSH).not_to receive(:start)
@@ -75,7 +75,7 @@ module NodeSpec
           end
 
           context 'closed session' do
-            before { ssh_session.stub(closed?: true) }
+            before { allow(ssh_session).to receive(:closed?).and_return(true) }
             include_examples 'new session'
           end
         end

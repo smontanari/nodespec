@@ -50,10 +50,10 @@ module NodeSpec
     }
 
     before do
-      BackendProxy::Exec.stub(:new => backend_proxy[:exec_helper])
-      BackendProxy::Cmd.stub(:new => backend_proxy[:cmd_helper])
-      BackendProxy::Ssh.stub(:new).with('remote session').and_return(backend_proxy[:ssh_helper])
-      BackendProxy::WinRM.stub(:new).with('remote session').and_return(backend_proxy[:winrm_helper])
+      allow(BackendProxy::Exec).to receive(:new).and_return(backend_proxy[:exec_helper])
+      allow(BackendProxy::Cmd).to receive(:new).and_return(backend_proxy[:cmd_helper])
+      allow(BackendProxy::Ssh).to receive(:new).with('remote session').and_return(backend_proxy[:ssh_helper])
+      allow(BackendProxy::WinRM).to receive(:new).with('remote session').and_return(backend_proxy[:winrm_helper])
     end
 
     it 'does not change the original options' do
@@ -107,8 +107,8 @@ module NodeSpec
       let(:remote_connection) {double('remote connection')}
       before do
         allow(ConnectionAdapters).to receive(:get).with('test_node', 'test_adapter', 'foo' => 'bar').and_return(adapter)
-        adapter.stub(connection: remote_connection)
-        remote_connection.stub(session: 'remote session')
+        allow(adapter).to receive(:connection).and_return(remote_connection)
+        allow(remote_connection).to receive(:session).and_return('remote session')
       end
 
       context 'no os given' do

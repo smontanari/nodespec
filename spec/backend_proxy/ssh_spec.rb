@@ -8,7 +8,7 @@ module NodeSpec
 
       shared_examples 'an ssh session command run' do |user, original_command, actual_command|
         before do
-          ssh_session.stub(options: {user: user})
+          allow(ssh_session).to receive(:options).and_return({user: user})
           allow(subject).to receive(:execute_within_timeout).with(actual_command).and_yield
         end
         

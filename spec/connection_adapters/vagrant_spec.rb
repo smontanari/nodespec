@@ -18,7 +18,7 @@ module NodeSpec
             }
 
             it 'raises an error' do
-              cmd_status.stub(success?: false)
+              allow(cmd_status).to receive(:success?).and_return(false)
 
               expect {Vagrant.new(*args)}.to raise_error 'Vagrant::Errors::SSHNotReady,The provider...'
             end
@@ -43,7 +43,7 @@ EOS
             include_examples 'valid_ssh_connection', 'test.host.name', 'testuser', {port: 1234, keys: '/test/path/private_key'} do
               let(:subject) {subject = Vagrant.new(*args)}
               before do
-                cmd_status.stub(success?: true)
+                allow(cmd_status).to receive(:success?).and_return(true)
               end
             end
           end
