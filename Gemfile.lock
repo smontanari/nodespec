@@ -3,7 +3,6 @@ PATH
   specs:
     nodespec (1.0.0)
       net-ssh
-      rspec (~> 3.0)
       serverspec
       specinfra
 
@@ -48,3 +47,4 @@ DEPENDENCIES
   bundler
   nodespec!
   rake
+  rspec (~> 3.0)

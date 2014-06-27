@@ -31,9 +31,12 @@ module NodeSpec
     [:create_directory, :create_file].each do |met|
       define_method(met) do |*args|
         path_argument = args.shift
-        path = path_argument.start_with?('/') ? path_argument : "#{WORKING_DIR}/#{path_argument}"
-        backend_proxy.send(met, path, *args)
-        path
+        unless path_argument.start_with?('/')
+          backend_proxy.create_directory WORKING_DIR
+          path_argument = "#{WORKING_DIR}/#{path_argument}"
+        end
+        backend_proxy.send(met, path_argument, *args)
+        path_argument
       end
     end
 

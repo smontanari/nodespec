@@ -20,10 +20,10 @@ This gem sits on top of Serverspec and features:
   gem.test_files    = gem.files.grep(%r{^spec/})
   gem.require_paths = ['lib']
 
-  gem.add_runtime_dependency 'rspec', '~> 3.0'
   gem.add_runtime_dependency 'net-ssh'
   gem.add_runtime_dependency 'serverspec'
   gem.add_runtime_dependency 'specinfra'
+  gem.add_development_dependency 'rspec', '~> 3.0'
   gem.add_development_dependency 'aws-sdk'
   gem.add_development_dependency 'bundler'
   gem.add_development_dependency 'rake'

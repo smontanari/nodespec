@@ -18,12 +18,14 @@ module NodeSpec
         subject.execute('test command')
       end
       it "creates a directory with a path relative to the node working directory" do
-        expect(backend_proxy[helper]).to receive(:create_directory).with('.nodespec/test_dir')
+        expect(backend_proxy[helper]).to receive(:create_directory).ordered.with('.nodespec')
+        expect(backend_proxy[helper]).to receive(:create_directory).ordered.with('.nodespec/test_dir')
         
         expect(subject.create_directory('test_dir')).to eq('.nodespec/test_dir')
       end
       it "writes to a file with a path relative to the node working directory" do
-        expect(backend_proxy[helper]).to receive(:create_file).with('.nodespec/test/file', 'test content')
+        expect(backend_proxy[helper]).to receive(:create_directory).ordered.with('.nodespec')
+        expect(backend_proxy[helper]).to receive(:create_file).ordered.with('.nodespec/test/file', 'test content')
         
         expect(subject.create_file('test/file', 'test content')).to eq('.nodespec/test/file')
       end
