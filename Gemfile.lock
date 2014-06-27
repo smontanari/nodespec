@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    nodespec (0.0.9)
+    nodespec (1.0.0)
       net-ssh
-      rspec
+      rspec (~> 3.0)
       serverspec
       specinfra
 
