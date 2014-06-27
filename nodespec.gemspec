@@ -6,7 +6,7 @@ require 'nodespec/version'
 Gem::Specification.new do |gem|
   gem.name          = 'nodespec'
   gem.version       = NodeSpec::VERSION
-  gem.summary       = 'RSpec tests on multiple node/server instances with provisioning'
+  gem.summary       = 'RSpec style tests for multiple nodes/server instances with support for provisioning instructions'
   gem.description   = <<-eos
 This gem sits on top of Serverspec and features:
   - Ability to test multiple servers with different os and backends.
