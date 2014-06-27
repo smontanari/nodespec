@@ -7,8 +7,9 @@ module NodeSpec
       attr_reader :connection
 
       def initialize(node_name, options = {})
-        options['host'] = node_name unless options.has_key? 'host'
-        @connection = SshConnection.new(options)
+        opts = options.dup
+        opts['host'] = node_name unless opts.has_key? 'host'
+        @connection = SshConnection.new(opts)
       end
     end
   end

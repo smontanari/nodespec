@@ -24,6 +24,7 @@ This gem sits on top of Serverspec and features:
   gem.add_runtime_dependency 'net-ssh'
   gem.add_runtime_dependency 'serverspec'
   gem.add_runtime_dependency 'specinfra'
+  gem.add_development_dependency 'aws-sdk'
   gem.add_development_dependency 'bundler'
   gem.add_development_dependency 'rake'
 end
