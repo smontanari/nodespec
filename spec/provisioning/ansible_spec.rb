@@ -7,7 +7,8 @@ module NodeSpec
       describe 'executing an ansible module' do
         before do
           allow(current_node).to receive(:name).and_return('test_host')
-          allow(current_node).to receive_message_chain(:remote_connection, :session, :host).and_return('test.host')
+          allow(current_node).to receive_message_chain(:remote_connection, :session, :transport, :host).and_return('test.host')
+          allow(current_node).to receive_message_chain(:remote_connection, :session, :transport, :port).and_return(1234)
           
         end
 
@@ -79,7 +80,6 @@ module NodeSpec
           before do
             allow(current_node).to receive_message_chain(:remote_connection, :session, :options).and_return({
               user: 'test_user',
-              port: 1234,
               keys: 'path/to user/key'
             })
           end
@@ -98,7 +98,7 @@ module NodeSpec
   
             context 'no groups specified' do
               before do
-                expect(inventory_file).to receive(:write).with(/test_host ansible_ssh_port=1234 ansible_ssh_host=test.host/)
+                expect(inventory_file).to receive(:write).with(/test_host ansible_ssh_host=test.host ansible_ssh_port=1234/)
               end
 
               it_executes_the_local_command(/ansible test_host .* -i \/path\/to\/inventory .*/) do
@@ -111,7 +111,7 @@ module NodeSpec
               before do
                 expect(inventory_file).to receive(:write).with <<-eos
 [test-group]
-test_host ansible_ssh_port=1234 ansible_ssh_host=test.host
+test_host ansible_ssh_host=test.host ansible_ssh_port=1234
 eos
               end
 
@@ -127,7 +127,6 @@ eos
           before do
             allow(current_node).to receive_message_chain(:remote_connection, :session, :options).and_return({
               user: 'test_user',
-              port: 1234,
               keys: 'path/to user/key'
             })
           end

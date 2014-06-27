@@ -11,7 +11,7 @@ module NodeSpec
       CUSTOM_INVENTORY_FILENAME = 'nodespec_ansible_hosts'
       AUTO_DISCOVERY_HOST_TEMPLATE = <<-EOS
 <%= "[" + group + "]" if group %>
-<%= @node.name %> ansible_ssh_port=<%= @node.remote_connection.session.options[:port] %> ansible_ssh_host=<%= @node.remote_connection.session.host %>
+<%= @node.name %> ansible_ssh_host=<%= @node.remote_connection.session.transport.host %> ansible_ssh_port=<%= @node.remote_connection.session.transport.port %>
 EOS
 
       def initialize(node)
