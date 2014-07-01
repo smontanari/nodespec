@@ -14,7 +14,7 @@ module NodeSpec
       end
 
       def cmd_create_file(path, content)
-        %Q[sh -c "cat > #{path.shellescape} << EOF\n#{content.strip}\nEOF"]
+        %Q[sh -c "cat > #{path.shellescape} << EOF\n#{content.strip.gsub('"', '\"')}\nEOF"]
       end
     end
   end

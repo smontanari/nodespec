@@ -19,7 +19,7 @@ module NodeSpec
           chef_client_runlist 'recipe1', 'recipe2', %w[--opt1 --opt2]
         end
 
-        context 'custom configuration' do
+        describe 'custom configuration' do
           before do
             expect(current_node).to receive(:create_file).with('chef_client.rb', 'test config').ordered.and_return('config/chef_client.rb')
           end
@@ -32,7 +32,7 @@ module NodeSpec
           end
         end
 
-        context 'custom cookbook path' do
+        describe 'custom cookbook path' do
           before do
             expect(current_node).to receive(:create_file).with('chef_client.rb', "cookbook_path ['/var/chef/cookbooks','/var/chef/site-cookbooks']").ordered.and_return('config/chef_client.rb')
           end
@@ -43,6 +43,20 @@ module NodeSpec
             set_cookbook_paths '/var/chef/cookbooks', '/var/chef/site-cookbooks'
 
             chef_client_runlist 'recipe1', 'recipe2', %w[--opt1 --opt2]
+          end
+        end
+
+        describe 'setting custom attributes' do
+          before do
+            expect(current_node).to receive(:create_file).with('chef_client_attributes.json', %q[{"test_attributes":{"attr1":"foo","attr2":"bar"}}]).ordered.and_return('config/chef_client_attributes.json')
+          end
+
+          it_executes_the_node_command(
+            'chef-client -z -j config/chef_client_attributes.json -o recipe1,recipe2'
+          ) do
+            set_attributes test_attributes: {attr1: 'foo', attr2: 'bar'}
+
+            chef_client_runlist 'recipe1', 'recipe2'
           end
         end
       end

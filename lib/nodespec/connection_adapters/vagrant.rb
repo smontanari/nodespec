@@ -1,4 +1,5 @@
 require 'open3'
+require 'nodespec/ssh_connection'
 
 module NodeSpec
   module ConnectionAdapters

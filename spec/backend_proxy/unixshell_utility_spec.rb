@@ -15,10 +15,10 @@ module NodeSpec
 
       it 'writes the given content to a file' do
         content = <<-eos
-some text
-some other text
+some 'text'
+some "other" text
 eos
-        expect(subject.cmd_create_file('/path to/file', content)).to eq "sh -c \"cat > /path\\ to/file << EOF\nsome text\nsome other text\nEOF\""
+        expect(subject.cmd_create_file('/path to/file', content)).to eq %Q[sh -c "cat > /path\\ to/file << EOF\nsome 'text'\nsome \\"other\\" text\nEOF"]
       end
     end
   end
