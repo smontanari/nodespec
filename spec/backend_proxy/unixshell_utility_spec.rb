@@ -13,6 +13,10 @@ module NodeSpec
         expect(subject.cmd_create_directory('/path to/dir')).to eq('sh -c "mkdir -p /path\ to/dir"')
       end
 
+      it 'returns the path to the temp directory' do
+        expect(subject.temp_directory).to eq('/tmp')
+      end
+
       it 'writes the given content to a file' do
         content = <<-eos
 some 'text'

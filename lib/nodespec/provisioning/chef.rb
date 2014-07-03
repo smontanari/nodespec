@@ -4,13 +4,14 @@ require 'json'
 module NodeSpec
   module Provisioning
     class Chef
-      CUSTOM_CLIENT_CONFIG_FILENAME = 'chef_client.rb'
-      CUSTOM_ATTRIBUTES_FILENAME = 'chef_client_attributes.json'
+      CLIENT_CONFIG_FILENAME = 'chef_client.rb'
+      ATTRIBUTES_FILENAME = 'chef_client_attributes.json'
+      NODES_DIRNAME = 'chef_nodes'
 
       def initialize(node)
         @node = node
-        @configuration_entries = []
         @custom_attributes = {}
+        @configuration_entries = []
       end
 
       def chef_apply_execute(snippet, options = [])
@@ -37,26 +38,29 @@ module NodeSpec
       end
 
       def chef_client_runlist(*args)
-        recipes, options = [], []
-        recipes << args.take_while {|arg| arg.is_a? String}
+        run_list_items, options = [], []
+        run_list_items << args.take_while {|arg| arg.is_a? String}
         options += args.last if args.last.is_a? Array
         options << configuration_option
         options << attributes_option
-        @node.execute("chef-client -z #{options.compact.join(' ')} -o #{recipes.join(',').shellescape}")
+        @node.execute("chef-client -z #{options.compact.join(' ')} -o #{run_list_items.join(',').shellescape}")
       end
 
       private
 
       def configuration_option
-        unless @configuration_entries.empty?
-          config_file = @node.create_file(CUSTOM_CLIENT_CONFIG_FILENAME, @configuration_entries.join("\n"))
-          "-c #{config_file}"
+        unless @configuration_entries.any? {|c| c =~ /^node_path .+$/}
+          nodes_directory = @node.create_temp_directory(NODES_DIRNAME)
+          @configuration_entries.unshift("node_path '#{nodes_directory}'")
         end
+        # puts @configuration_entries.join("\n")
+        config_file = @node.create_file(CLIENT_CONFIG_FILENAME, @configuration_entries.join("\n"))
+        "-c #{config_file}"
       end
 
       def attributes_option
         unless @custom_attributes.empty?
-          attr_file = @node.create_file(CUSTOM_ATTRIBUTES_FILENAME, JSON.generate(@custom_attributes))
+          attr_file = @node.create_file(ATTRIBUTES_FILENAME, JSON.generate(@custom_attributes))
           "-j #{attr_file}"
         end
       end

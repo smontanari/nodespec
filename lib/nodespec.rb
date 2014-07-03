@@ -8,8 +8,8 @@ require 'nodespec/provisioning'
 module NodeSpec
   class << self
     attr_reader :current_node
-    def set_current_node(description, options)
-      @current_node = NodeConfigurations.instance.get(description, options)
+    def set_current_node(name, options)
+      @current_node = NodeConfigurations.instance.get(name, options)
       yield(@current_node) if block_given?
     end
   end

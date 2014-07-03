@@ -40,6 +40,11 @@ module NodeSpec
       end
     end
 
+    def create_temp_directory(path)
+      path = path[1..-1] if path.start_with?('/')
+      create_directory("#{backend_proxy.temp_directory}/#{path}")
+    end
+
     def execute(command)
       backend_proxy.execute(command)
     end
