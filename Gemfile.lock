@@ -4,7 +4,7 @@ PATH
     nodespec (0.1.2)
       net-ssh
       serverspec
-      specinfra
+      specinfra (>= 1.18.4)
 
 GEM
   remote: https://rubygems.org/
@@ -37,7 +37,7 @@ GEM
       net-ssh
       rspec (>= 2.13.0)
       specinfra (>= 0.7.1)
-    specinfra (1.18.2)
+    specinfra (1.18.4)
 
 PLATFORMS
   ruby
