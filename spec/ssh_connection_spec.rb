@@ -8,25 +8,24 @@ module NodeSpec
     before do
       allow(Net::SSH).to receive(:configuration_for).and_return({})
       allow(Net::SSH).to receive(:start).with('test.host.name', 'testuser', port: 1234, password: 'testpassword', keys: 'testkeys').and_return('new session')
-      [:ssh, :ssh=, :host, :host=].each {|method| allow(rspec_configuration).to receive(method)}
+      [:ssh, :ssh=, :host=].each {|method| allow(rspec_configuration).to receive(method)}
+    end
+
+    shared_context 'existing session' do |hostname, port|
+      before do
+        allow(rspec_configuration).to receive(:ssh).and_return(ssh_session)
+        allow(ssh_session).to receive(:host).and_return(hostname)
+        allow(ssh_session).to receive(:options).and_return({port: port})
+      end
     end
 
     shared_examples 'creating new session' do
-      before {allow(rspec_configuration).to receive(:ssh).and_return(nil, nil, 'new session')}
-
-      it 'starts a new ssh session in the rspec configuration ' do
+      before do
         expect(rspec_configuration).to receive(:ssh=).with('new session')
-
-        subject.bind_to(rspec_configuration)
-      end
-      
-      it 'sets the new hostname in the rspec configuration ' do
         expect(rspec_configuration).to receive(:host=).with('test.host.name')
-
-        subject.bind_to(rspec_configuration)
       end
 
-      it 'holds the session' do
+      it 'creates and holds a new session' do
         subject.bind_to(rspec_configuration)
 
         expect(subject.session).to eq('new session')
@@ -35,50 +34,44 @@ module NodeSpec
 
     shared_examples 'binding to configuration' do
       describe '#bind_to' do
-        context 'different or no hostname' do
-          [nil, 'another host'].each do |current_hostname|
-            before { allow(rspec_configuration).to receive(:host).and_return(current_hostname) }
+        context 'no existing session' do
+          before do
+            allow(rspec_configuration).to receive(:ssh).and_return(nil)
+          end
 
-            it 'closes an existing ssh session' do
-              allow(rspec_configuration).to receive(:ssh).and_return(ssh_session)
+          include_examples 'creating new session'
+        end
+
+        {'another host' => 1234, 'test.host.name' => 5678}.each do |hostname, port|
+          context 'existing session with different connection' do
+            include_context 'existing session', hostname, port
+            before do
               expect(ssh_session).to receive(:close)
               allow(ssh_session).to receive(:closed?).and_return(true)
-
-              subject.bind_to(rspec_configuration)
             end
-
             include_examples 'creating new session'
           end
         end
 
-        context 'same hostname' do
-          before { allow(rspec_configuration).to receive(:host).and_return('test.host.name') }
+        context 'existing session with same connection' do
+          include_context 'existing session', 'test.host.name', 1234          
+          context 'open session' do
+            before { allow(ssh_session).to receive(:closed?).and_return(false) }
 
-          context 'no session' do
-            include_examples 'creating new session'
+            it 'does not change the current rspec configuration' do
+              expect(Net::SSH).not_to receive(:start)
+              expect(rspec_configuration).not_to receive(:ssh=)
+              expect(rspec_configuration).not_to receive(:host=)
+        
+              subject.bind_to(rspec_configuration)
+
+              expect(subject.session).to eq(ssh_session)
+            end
           end
 
-          context 'existing session' do
-            before { allow(rspec_configuration).to receive(:ssh).and_return(ssh_session) }
-          
-            context 'open session' do
-              before { allow(ssh_session).to receive(:closed?).and_return(false) }
-
-              it 'does not change the current rspec configuration' do
-                expect(Net::SSH).not_to receive(:start)
-                expect(rspec_configuration).not_to receive(:ssh=)
-                expect(rspec_configuration).not_to receive(:host=)
-          
-                subject.bind_to(rspec_configuration)
-
-                expect(subject.session).to eq(ssh_session)
-              end
-            end
-
-            context 'closed session' do
-              before { allow(ssh_session).to receive(:closed?).and_return(true) }
-              include_examples 'creating new session'
-            end
+          context 'closed session' do
+            before { allow(ssh_session).to receive(:closed?).and_return(true) }
+            include_examples 'creating new session'
           end
         end
       end
