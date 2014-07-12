@@ -1,4 +1,4 @@
-require 'nodespec/ssh_connection'
+require_relative 'ssh_connection'
 
 module NodeSpec
   module ConnectionAdapters
