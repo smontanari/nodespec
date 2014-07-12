@@ -9,8 +9,9 @@ Gem::Specification.new do |gem|
   gem.summary       = 'RSpec style tests for multiple nodes/server instances with support for provisioning instructions'
   gem.description   = <<-eos
 This gem sits on top of Serverspec and features:
-  - Ability to test multiple servers with different os and backends.
-  - Ability to run provisioning instructions (chef, puppet, shell) as part of the test setup.
+  - Supports different os types (Windows/UN*X) and backends (SSH, WinRM) at the same time.
+  - Supports multiple containers (Vagrant, Amazon EC2)
+  - Ability to run provisioning instructions (chef, puppet, ansible, shell) as part of the test setup.
   eos
   
   gem.authors       = ['Silvio Montanari']
@@ -25,6 +26,7 @@ This gem sits on top of Serverspec and features:
   gem.add_runtime_dependency 'specinfra', '>= 1.18.4'
   gem.add_development_dependency 'rspec', '~> 3.0'
   gem.add_development_dependency 'aws-sdk'
+  gem.add_development_dependency 'winrm'
   gem.add_development_dependency 'bundler'
   gem.add_development_dependency 'rake'
 end

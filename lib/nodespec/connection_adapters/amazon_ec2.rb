@@ -1,19 +1,13 @@
+require 'nodespec/runtime_gem_loader'
 require_relative 'ssh_connection'
 
 module NodeSpec
   module ConnectionAdapters
     module AmazonEc2
+      GEMLOAD_ERROR = 'In order to use the amazon_ec2 adapter you must install the Amazon Web Service gem'
       def self.new(node_name, options)
-        begin
-          require 'aws-sdk'
+        RuntimeGemLoader.require_or_fail('aws-sdk', GEMLOAD_ERROR) do
           AmazonEc2.new(node_name, options)
-        rescue LoadError => e
-          puts <<-EOS
-Error: #{e.message}
-In order to use the amazon_ec2 adapter you must install the Amazon Web Service gem:
-
-gem install 'aws-sdk'
-EOS
         end
       end
 
