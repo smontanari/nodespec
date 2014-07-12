@@ -7,7 +7,6 @@ module NodeSpec
       let(:ssh_session) {double('ssh session')}
 
       before do
-        allow(Net::SSH).to receive(:configuration_for).and_return({})
         allow(Net::SSH).to receive(:start).with('test.host.name', 'testuser', port: 1234, password: 'testpassword', keys: 'testkeys').and_return('new session')
         [:ssh, :ssh=, :host=].each {|method| allow(rspec_configuration).to receive(method)}
       end
