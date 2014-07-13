@@ -1,6 +1,7 @@
 require 'aws-sdk'
 require 'spec_helper'
 require 'nodespec/connection_adapters/amazon_ec2'
+require 'nodespec/connection_adapters/winrm'
 
 module NodeSpec
   module ConnectionAdapters
@@ -19,13 +20,18 @@ module NodeSpec
           allow(ec2_instance).to receive(:status).ordered.and_return(:running)
           allow(ec2_instance).to receive(:public_dns_name).ordered.and_return('test hostname')
         end
-        context 'instance name from the node name' do
-          let(:subject) {AmazonEc2.new('test-instance', 'foo' => 'bar')}
-          include_examples 'valid_ssh_connection', 'host' => 'test hostname', 'foo' => 'bar'
-        end
-        context 'instance name from the options' do
-          let(:subject) {AmazonEc2.new('test_node', 'instance' => 'test-instance', 'foo' => 'bar')}
-          include_examples 'valid_ssh_connection', 'host' => 'test hostname', 'foo' => 'bar'
+
+        %w[ssh winrm].each do |connection|
+          context "#{connection} connection" do
+            context 'instance name from the node name' do
+              let(:subject) {AmazonEc2.new('test-instance', connection => {'foo' => 'bar'})}
+              include_examples "valid_#{connection}_connection", 'test hostname', 'foo' => 'bar'
+            end
+            context "instance name from the options" do
+              let(:subject) {AmazonEc2.new('test_node', 'instance' => 'test-instance', connection => {'foo' => 'bar'})}
+              include_examples "valid_#{connection}_connection", 'test hostname', 'foo' => 'bar'
+            end
+          end
         end
       end
 

@@ -40,8 +40,7 @@ Host test_vm
 EOS
             }
 
-            include_examples 'valid_ssh_connection', {
-              'host' => 'test.host.name',
+            include_examples 'valid_ssh_connection', 'test.host.name', {
               'user' => 'testuser',
               'port' => 1234,
               'keys' => '/test/path/private_key'

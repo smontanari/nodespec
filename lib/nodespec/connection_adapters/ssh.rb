@@ -8,8 +8,8 @@ module NodeSpec
 
       def initialize(node_name, options = {})
         opts = options.dup
-        opts['host'] = node_name unless opts.has_key? 'host'
-        @connection = SshConnection.new(opts)
+        host = opts.delete('host') || node_name
+        @connection = SshConnection.new(host, opts)
       end
     end
   end

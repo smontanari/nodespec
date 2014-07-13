@@ -1,4 +1,5 @@
 require 'nodespec/command_execution'
+require 'nodespec/run_options'
 require_relative 'base'
 
 module NodeSpec
@@ -9,6 +10,7 @@ module NodeSpec
       end
 
       def execute command
+        @winrm_session.set_timeout(NodeSpec::RunOptions.command_timeout)
         result = @winrm_session.powershell(command)
         stdout, stderr = [:stdout, :stderr].map do |s|
           result[:data].select {|item| item.key? s}.map {|item| item[s]}.join

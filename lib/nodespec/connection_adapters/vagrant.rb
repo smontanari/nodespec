@@ -8,8 +8,8 @@ module NodeSpec
       
       def initialize(node_name, options = {})
         vm_name = options['vm_name'] || node_name
-        fetch_connection_details(vm_name) do |opts|
-          @connection = SshConnection.new(opts)
+        fetch_connection_details(vm_name) do |host, opts|
+          @connection = SshConnection.new(host, opts)
         end
       end
 
@@ -27,7 +27,7 @@ module NodeSpec
         /^\s*Port\s+(?<port>\d+)$/ =~ data
         /^\s*User\s+(?<username>.*)$/ =~ data
         /^\s*IdentityFile\s+(?<private_key_path>.*)$/ =~ data
-        {'host' => hostname, 'port' => port.to_i, 'user' => username, 'keys' => private_key_path}
+        [hostname, {'port' => port.to_i, 'user' => username, 'keys' => private_key_path}]
       end
 
       def parse_error_data(data)

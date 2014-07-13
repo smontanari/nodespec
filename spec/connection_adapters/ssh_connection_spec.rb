@@ -78,7 +78,7 @@ module NodeSpec
       end
 
       context 'with given credentials' do
-        let(:subject) {SshConnection.new('host' => 'test.host.name', 'port' => 1234, 'user' => 'testuser', 'password' => 'testpassword', 'keys' => 'testkeys')}
+        let(:subject) {SshConnection.new('test.host.name', 'port' => 1234, 'user' => 'testuser', 'password' => 'testpassword', 'keys' => 'testkeys')}
         before do
           allow(Net::SSH).to receive(:configuration_for).and_return({})
         end
@@ -86,7 +86,7 @@ module NodeSpec
       end
 
       context 'credentials from OpenSSH config files' do
-        let(:subject) {SshConnection.new('host' => 'test.host.name', 'port' => 1234, 'user' => 'testuser')}
+        let(:subject) {SshConnection.new('test.host.name', 'port' => 1234, 'user' => 'testuser')}
         before do
           allow(Net::SSH).to receive(:configuration_for).with('test.host.name').and_return(password: 'testpassword', keys: 'testkeys')
         end

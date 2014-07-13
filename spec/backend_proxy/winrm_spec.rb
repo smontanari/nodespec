@@ -5,6 +5,9 @@ module NodeSpec
     describe WinRM do
       let(:winrm) { double('winrm session') }
       let(:subject) {WinRM.new(winrm)}
+      before do
+        allow(winrm).to receive(:set_timeout).with(NodeSpec::RunOptions.command_timeout)
+      end
 
       it 'returns true upon successful execution' do
         result = {exitcode: 0, data: [{stdout: 'output line 1'}, {stdout: 'output line 2'}]}

@@ -5,12 +5,24 @@ module NodeSpec
   module ConnectionAdapters
     class WinrmConnection
       include VerboseOutput
+      DEFAULT_PORT = 5985
+      DEFAULT_TRANSPORT = :plaintext
+      DEFAULT_TRANSPORT_OPTIONS = {disable_sspi: true}
+      
       attr_reader :session
 
-      def initialize(endpoint, transport, options = {})
-        @endpoint = endpoint
-        @transport = transport
-        @options = options
+      def initialize(hostname, options = {})
+        opts = options.dup
+        port = opts.delete('port') || DEFAULT_PORT
+        @endpoint = "http://#{hostname}:#{port}/wsman"
+
+        if opts.has_key?('transport')
+          @transport = opts.delete('transport').to_sym
+          @options = opts
+        else
+          @transport = DEFAULT_TRANSPORT
+          @options = DEFAULT_TRANSPORT_OPTIONS.merge(opts)
+        end
       end
 
       def bind_to(configuration)
