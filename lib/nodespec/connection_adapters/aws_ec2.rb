@@ -4,15 +4,15 @@ require_relative 'winrm_connection'
 
 module NodeSpec
   module ConnectionAdapters
-    module AmazonEc2
-      GEMLOAD_ERROR = 'In order to use the amazon_ec2 adapter you must install the Amazon Web Service gem'
+    module AwsEc2
+      GEMLOAD_ERROR = 'In order to use any aws adapter you must install the Amazon Web Service gem'
       def self.new(node_name, options)
         RuntimeGemLoader.require_or_fail('aws-sdk', GEMLOAD_ERROR) do
-          AmazonEc2.new(node_name, options)
+          AwsEc2.new(node_name, options)
         end
       end
 
-      class AmazonEc2
+      class AwsEc2
         attr_reader :connection
 
         def initialize(node_name, options = {})

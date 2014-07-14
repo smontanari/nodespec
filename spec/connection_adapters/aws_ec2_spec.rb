@@ -1,11 +1,10 @@
 require 'aws-sdk'
 require 'spec_helper'
-require 'nodespec/connection_adapters/amazon_ec2'
-require 'nodespec/connection_adapters/winrm'
+require 'nodespec/connection_adapters/aws_ec2'
 
 module NodeSpec
   module ConnectionAdapters
-    describe AmazonEc2 do
+    describe AwsEc2 do
       let(:ec2_instance) {double('ec2 instance')}
 
       before do
@@ -24,11 +23,11 @@ module NodeSpec
         %w[ssh winrm].each do |connection|
           context "#{connection} connection" do
             context 'instance name from the node name' do
-              let(:subject) {AmazonEc2.new('test-instance', connection => {'foo' => 'bar'})}
+              let(:subject) {AwsEc2.new('test-instance', connection => {'foo' => 'bar'})}
               include_examples "valid_#{connection}_connection", 'test hostname', 'foo' => 'bar'
             end
             context "instance name from the options" do
-              let(:subject) {AmazonEc2.new('test_node', 'instance' => 'test-instance', connection => {'foo' => 'bar'})}
+              let(:subject) {AwsEc2.new('test_node', 'instance' => 'test-instance', connection => {'foo' => 'bar'})}
               include_examples "valid_#{connection}_connection", 'test hostname', 'foo' => 'bar'
             end
           end
@@ -42,7 +41,7 @@ module NodeSpec
           end
 
           it 'raises an error' do
-            expect {AmazonEc2.new('test-instance', 'foo' => 'bar')}.to raise_error
+            expect {AwsEc2.new('test-instance', 'foo' => 'bar')}.to raise_error
           end
         end
 
@@ -53,7 +52,7 @@ module NodeSpec
           end
 
           it 'raises an error' do
-            expect {AmazonEc2.new('test-instance', 'foo' => 'bar')}.to raise_error
+            expect {AwsEc2.new('test-instance', 'foo' => 'bar')}.to raise_error
           end
         end
       end
