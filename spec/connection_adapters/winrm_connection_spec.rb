@@ -25,19 +25,19 @@ module NodeSpec
 
         context 'default port and transport' do
           let(:subject) {WinrmConnection.new('test.host.name', 'foo' => 'bar')}
-          include_examples 'creating new session', 'test.host.name', 5985, :plaintext, {'foo' => 'bar', disable_sspi: true}
+          include_examples 'creating new session', 'test.host.name', 5985, :plaintext, {foo: 'bar', disable_sspi: true}
         end
 
         context 'custom port and transport' do
           let(:subject) {WinrmConnection.new('test.host.name', 'port' => 1234, 'transport' => 'test_transport', 'foo' => 'bar')}
-          include_examples 'creating new session', 'test.host.name', 1234, :test_transport, {'foo' => 'bar'}
+          include_examples 'creating new session', 'test.host.name', 1234, :test_transport, {foo: 'bar'}
         end
       end
 
       describe 'binding to configuration' do
         let(:winrm_session) {double('winrm session')}
         let(:subject) { WinrmConnection.new(
-          'test.host.name', 'port' => 1234, 'transport' => 'test_transport', foo: 'bar')
+          'test.host.name', 'port' => 1234, 'transport' => 'test_transport', foo: 'bar', 'baz' => 'quaz')
         }
 
         shared_context 'existing session' do |endpoint|
@@ -53,12 +53,12 @@ module NodeSpec
               allow(rspec_configuration).to receive(:winrm).and_return(nil)
             end
 
-            include_examples 'creating new session', 'test.host.name', 1234, :test_transport, {foo: 'bar'}
+            include_examples 'creating new session', 'test.host.name', 1234, :test_transport, {foo: 'bar', baz: 'quaz'}
           end
 
           context 'existing session with different endpoint' do
             include_context 'existing session', 'http://test.another.host.name:1234/wsman'
-            include_examples 'creating new session', 'test.host.name', 1234, :test_transport, {foo: 'bar'}
+            include_examples 'creating new session', 'test.host.name', 1234, :test_transport, {foo: 'bar', baz: 'quaz'}
           end
 
           context 'existing session with same connection' do

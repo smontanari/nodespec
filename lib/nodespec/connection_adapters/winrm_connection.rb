@@ -23,6 +23,7 @@ module NodeSpec
           @transport = DEFAULT_TRANSPORT
           @options = DEFAULT_TRANSPORT_OPTIONS.merge(opts)
         end
+        @options = @options.inject({}) {|h,(k,v)| h[k.to_sym] = v; h}
       end
 
       def bind_to(configuration)
