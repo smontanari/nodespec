@@ -53,7 +53,6 @@ module NodeSpec
           nodes_directory = @node.create_temp_directory(NODES_DIRNAME)
           @configuration_entries.unshift("node_path '#{nodes_directory}'")
         end
-        # puts @configuration_entries.join("\n")
         config_file = @node.create_file(CLIENT_CONFIG_FILENAME, @configuration_entries.join("\n"))
         "-c #{config_file}"
       end

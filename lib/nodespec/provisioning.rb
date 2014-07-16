@@ -5,8 +5,9 @@ module NodeSpec
     self.constants.each do |provisioner_name|
       provisioner_class = self.const_get(provisioner_name)
       define_method("provision_node_with_#{provisioner_name.downcase}".to_sym) do |&block|
-        @provisioner ||= provisioner_class.new(NodeSpec.current_node)
-        @provisioner.instance_eval(&block)
+        @provisioners ||= {}
+        @provisioners[provisioner_name.downcase] = provisioner_class.new(NodeSpec.current_node) unless @provisioners.key?(provisioner_name.downcase)
+        @provisioners[provisioner_name.downcase].instance_eval(&block)
       end
     end
   end
