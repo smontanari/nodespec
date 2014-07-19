@@ -7,7 +7,7 @@ module NodeSpec
     class BadNodeNameError < StandardError; end
 
     WORKING_DIR = '.nodespec'
-    attr_reader :os, :remote_connection, :name
+    attr_reader :os, :connection, :name
 
     def initialize(node_name, options = nil)
       @name = validate(node_name)
@@ -16,12 +16,12 @@ module NodeSpec
       adapter_name = options.delete('adapter')
       if adapter_name
         adapter = ConnectionAdapters.get(node_name, adapter_name, options)
-        @remote_connection = adapter.connection
+        @connection = adapter.connection
       end
     end
 
     def backend
-      if @remote_connection
+      if @connection
         remote_backend
       else
         local_backend
@@ -56,8 +56,8 @@ module NodeSpec
     end
 
     def init_backend_proxy
-      if @remote_connection
-        BackendProxy.const_get(remote_backend).new(@remote_connection.session)
+      if @connection
+        BackendProxy.const_get(remote_backend).new(@connection.session)
       else
         BackendProxy.const_get(local_backend).new
       end

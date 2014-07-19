@@ -32,6 +32,11 @@ module NodeSpec
             end
           end
         end
+
+        describe 'openssh default connection' do
+          let(:subject) {AwsEc2.new('test-instance', {})}
+          include_examples "valid_ssh_connection", 'test hostname', {}
+        end
       end
 
       describe 'connecting to an unreachable instance' do

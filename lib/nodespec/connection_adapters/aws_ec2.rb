@@ -20,10 +20,10 @@ module NodeSpec
           ec2_instance = AWS.ec2.instances[instance_name]
 
           raise "EC2 Instance #{instance_name} is not reachable" unless ec2_instance.exists? && ec2_instance.status == :running
-          if options.has_key?('ssh')
-            @connection = SshConnection.new(ec2_instance.public_dns_name, options['ssh'])
-          elsif options.has_key?('winrm')
+          if options.has_key?('winrm')
             @connection = WinrmConnection.new(ec2_instance.public_dns_name, options['winrm'])
+          else
+            @connection = SshConnection.new(ec2_instance.public_dns_name, options['ssh'] || {})
           end
         end
       end

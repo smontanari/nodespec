@@ -19,7 +19,12 @@ RSpec.configure do |c|
   c.before :all do |eg|
     NodeSpec.set_current_node(eg.class.description, eg.class.metadata[:node_config]) do |node|
       c.os = node.os
-      node.remote_connection.bind_to(c) if node.remote_connection
+      if node.connection
+        node.connection.bind_to(c) 
+      elsif c.ssh
+        c.ssh.close
+        c.ssh = nil 
+      end
     end 
   end
 
