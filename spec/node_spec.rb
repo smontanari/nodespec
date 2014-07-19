@@ -49,12 +49,12 @@ module NodeSpec
       end
     end
 
-    let(:connection) {double('connection')}
+    let(:communicator) {double('communicator')}
     let(:rspec_subject) {double('rspec subject')}
     let(:backend_proxy) {double('backend_proxy')}
 
     before do
-      allow(connection).to receive(:backend_proxy).and_return(backend_proxy)
+      allow(communicator).to receive(:backend_proxy).and_return(backend_proxy)
     end
 
     it 'does not change the original options' do
@@ -84,7 +84,7 @@ module NodeSpec
 
     context 'no adapter' do
       before do
-        allow(CommunicationAdapters::NoConnection).to receive(:new).and_return(connection)
+        allow(CommunicationAdapters::NativeCommunicator).to receive(:new).and_return(communicator)
       end
 
       context 'no options' do
@@ -113,8 +113,8 @@ module NodeSpec
       let(:adapter) {double('adapter')}
       before do
         allow(CommunicationAdapters).to receive(:get).with('test_node', 'test_adapter', 'foo' => 'bar').and_return(adapter)
-        allow(adapter).to receive(:connection).and_return(connection)
-        allow(connection).to receive(:session).and_return('remote session')
+        allow(adapter).to receive(:communicator).and_return(communicator)
+        allow(communicator).to receive(:session).and_return('remote session')
       end
 
       context 'no os given' do

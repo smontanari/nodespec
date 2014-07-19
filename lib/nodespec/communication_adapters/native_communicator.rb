@@ -3,7 +3,7 @@ require_relative 'local'
 
 module NodeSpec
   module CommunicationAdapters
-    class NoConnection
+    class NativeCommunicator
       include Local
       include VerboseOutput
 

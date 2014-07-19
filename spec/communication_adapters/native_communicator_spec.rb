@@ -1,10 +1,10 @@
-require 'nodespec/communication_adapters/no_connection'
+require 'nodespec/communication_adapters/native_communicator'
 
 module NodeSpec
   module CommunicationAdapters
-    describe NoConnection do
+    describe NativeCommunicator do
       it 'is a Local connection' do
-        expect(NoConnection.new).to be_a(Local)
+        expect(NativeCommunicator.new).to be_a(Local)
       end
 
       describe '#bind_to' do

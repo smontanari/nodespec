@@ -13,7 +13,7 @@ module NodeSpec
       end
 
       class AwsEc2
-        attr_reader :connection
+        attr_reader :communicator
 
         def initialize(node_name, options = {})
           instance_name = options['instance'] || node_name
@@ -21,9 +21,9 @@ module NodeSpec
 
           raise "EC2 Instance #{instance_name} is not reachable" unless ec2_instance.exists? && ec2_instance.status == :running
           if options.has_key?('winrm')
-            @connection = WinrmCommunicator.new(ec2_instance.public_dns_name, options['winrm'])
+            @communicator = WinrmCommunicator.new(ec2_instance.public_dns_name, options['winrm'])
           else
-            @connection = SshCommunicator.new(ec2_instance.public_dns_name, options['ssh'] || {})
+            @communicator = SshCommunicator.new(ec2_instance.public_dns_name, options['ssh'] || {})
           end
         end
       end

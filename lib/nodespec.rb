@@ -19,7 +19,7 @@ RSpec.configure do |c|
   c.before :all do |eg|
     NodeSpec.set_current_node(eg.class.description, eg.class.metadata[:node_config]) do |node|
       c.os = node.os
-      node.connection.bind_to(c) 
+      node.communicator.bind_to(c) 
     end 
   end
 

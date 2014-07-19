@@ -21,7 +21,7 @@ module NodeSpec
         end
 
         %w[ssh winrm].each do |connection|
-          context "#{connection} connection" do
+          context "#{connection} communicator" do
             context 'instance name from the node name' do
               let(:subject) {AwsEc2.new('test-instance', connection => {'foo' => 'bar'})}
               include_examples "valid_#{connection}_communicator", 'test hostname', 'foo' => 'bar'

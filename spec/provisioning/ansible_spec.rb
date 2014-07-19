@@ -7,15 +7,15 @@ module NodeSpec
       describe 'executing an ansible module' do
         before do
           allow(current_node).to receive(:name).and_return('test_host')
-          allow(current_node).to receive_message_chain(:remote_connection, :session, :transport, :host).and_return('test.host')
-          allow(current_node).to receive_message_chain(:remote_connection, :session, :transport, :port).and_return(1234)
+          allow(current_node).to receive_message_chain(:communicator, :session, :transport, :host).and_return('test.host')
+          allow(current_node).to receive_message_chain(:communicator, :session, :transport, :port).and_return(1234)
           
         end
 
         describe 'running ansible' do
           context 'single key' do
             before do
-              allow(current_node).to receive_message_chain(:remote_connection, :session, :options).and_return({
+              allow(current_node).to receive_message_chain(:communicator, :session, :options).and_return({
                 user: 'test_user',
                 keys: 'path/to user/key'
               })
@@ -27,7 +27,7 @@ module NodeSpec
 
           context 'multiples keys' do
             before do
-              allow(current_node).to receive_message_chain(:remote_connection, :session, :options).and_return({
+              allow(current_node).to receive_message_chain(:communicator, :session, :options).and_return({
                 user: 'test_user',
                 keys: ['path/to user/key1', 'path/to user/key2']
               })
@@ -39,7 +39,7 @@ module NodeSpec
 
           context 'disable sudo' do
             before do
-              allow(current_node).to receive_message_chain(:remote_connection, :session, :options).and_return({
+              allow(current_node).to receive_message_chain(:communicator, :session, :options).and_return({
                 user: 'test_user',
                 keys: 'path/to user/key'
               })
@@ -52,7 +52,7 @@ module NodeSpec
 
           context 'enable sudo' do
             before do
-              allow(current_node).to receive_message_chain(:remote_connection, :session, :options).and_return({
+              allow(current_node).to receive_message_chain(:communicator, :session, :options).and_return({
                 user: 'test_user',
                 keys: 'path/to user/key'
               })
@@ -65,7 +65,7 @@ module NodeSpec
 
           context 'runs as root without sudo' do
             before do
-              allow(current_node).to receive_message_chain(:remote_connection, :session, :options).and_return({
+              allow(current_node).to receive_message_chain(:communicator, :session, :options).and_return({
                 user: 'root',
                 keys: 'path/to user/key'
               })
@@ -78,7 +78,7 @@ module NodeSpec
 
         describe 'setting a path to an inventory' do
           before do
-            allow(current_node).to receive_message_chain(:remote_connection, :session, :options).and_return({
+            allow(current_node).to receive_message_chain(:communicator, :session, :options).and_return({
               user: 'test_user',
               keys: 'path/to user/key'
             })
@@ -125,7 +125,7 @@ eos
 
         describe 'configuring ansible' do
           before do
-            allow(current_node).to receive_message_chain(:remote_connection, :session, :options).and_return({
+            allow(current_node).to receive_message_chain(:communicator, :session, :options).and_return({
               user: 'test_user',
               keys: 'path/to user/key'
             })
