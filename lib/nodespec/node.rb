@@ -1,6 +1,6 @@
 require 'specinfra/helper'
 require 'nodespec/connection_adapters'
-require 'nodespec/backends'
+require 'nodespec/connection_adapters/no_connection'
 
 module NodeSpec
   class Node
@@ -17,59 +17,38 @@ module NodeSpec
       if adapter_name
         adapter = ConnectionAdapters.get(node_name, adapter_name, options)
         @connection = adapter.connection
+      else
+        @connection = ConnectionAdapters::NoConnection.new
       end
+      @backend_proxy = @connection.backend_proxy(@os)
     end
 
     def backend
-      if @connection
-        remote_backend
-      else
-        local_backend
-      end
+      @connection.backend(@os)
     end
 
     [:create_directory, :create_file].each do |met|
       define_method(met) do |*args|
         path_argument = args.shift
         unless path_argument.start_with?('/')
-          backend_proxy.create_directory WORKING_DIR
+          @backend_proxy.create_directory WORKING_DIR
           path_argument = "#{WORKING_DIR}/#{path_argument}"
         end
-        backend_proxy.send(met, path_argument, *args)
+        @backend_proxy.send(met, path_argument, *args)
         path_argument
       end
     end
 
     def create_temp_directory(path)
       path = path[1..-1] if path.start_with?('/')
-      create_directory("#{backend_proxy.temp_directory}/#{path}")
+      create_directory("#{@backend_proxy.temp_directory}/#{path}")
     end
 
     def execute(command)
-      backend_proxy.execute(command)
+      @backend_proxy.execute(command)
     end
 
     private
-
-    def backend_proxy
-      @backend_proxy ||= init_backend_proxy
-    end
-
-    def init_backend_proxy
-      if @connection
-        BackendProxy.const_get(remote_backend).new(@connection.session)
-      else
-        BackendProxy.const_get(local_backend).new
-      end
-    end
-
-    def local_backend
-      @os == 'Windows' ? Backends::Cmd : Backends::Exec
-    end
-
-    def remote_backend
-      @os == 'Windows' ? Backends::WinRM : Backends::Ssh
-    end
 
     def validate(name)
       raise BadNodeNameError.new unless name =~ /^[a-zA-Z0-9][a-zA-Z0-9. \-_]+\s*$/

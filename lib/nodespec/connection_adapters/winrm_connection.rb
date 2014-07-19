@@ -1,9 +1,11 @@
 require 'nodespec/verbose_output'
 require 'nodespec/runtime_gem_loader'
+require_relative 'remote'
 
 module NodeSpec
   module ConnectionAdapters
     class WinrmConnection
+      include Remote
       include VerboseOutput
       DEFAULT_PORT = 5985
       DEFAULT_TRANSPORT = :plaintext

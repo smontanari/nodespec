@@ -1,10 +1,12 @@
 require 'net/ssh'
 require 'nodespec/verbose_output'
+require_relative 'remote'
 
 module NodeSpec
   module ConnectionAdapters
     class SshConnection
       include VerboseOutput
+      include Remote
       attr_reader :session
 
       def initialize(host, options)
@@ -19,7 +21,9 @@ module NodeSpec
       def bind_to(configuration)
         current_session = configuration.ssh
         if current_session && (current_session.host != @host || current_session.options[:port] != @ssh_options[:port])
-          verbose_puts "\nClosing connection to #{configuration.ssh.host}:#{configuration.ssh.options[:port]}"
+          msg = "\nClosing connection to #{configuration.ssh.host}"
+          msg << ":#{configuration.ssh.options[:port]}" if configuration.ssh.options[:port]
+          verbose_puts msg
           current_session.close
         end
         if current_session.nil? || current_session.closed?

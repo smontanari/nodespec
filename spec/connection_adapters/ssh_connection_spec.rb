@@ -93,6 +93,10 @@ module NodeSpec
 
         include_examples 'binding to configuration'
       end
+
+      it 'is a Remote connection' do
+        expect(SshConnection.new('test.host.name', {})).to be_a(Remote)
+      end
     end
   end
 end
