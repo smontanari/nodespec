@@ -1,7 +1,7 @@
-require 'nodespec/connection_adapters/remote'
+require 'nodespec/communication_adapters/remote'
 
 module NodeSpec
-  module ConnectionAdapters
+  module CommunicationAdapters
     describe Remote do
       let(:subject) {
         Object.new.tap do |obj|

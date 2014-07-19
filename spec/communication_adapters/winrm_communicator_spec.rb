@@ -1,9 +1,9 @@
 require 'winrm'
-require 'nodespec/connection_adapters/winrm_connection'
+require 'nodespec/communication_adapters/winrm_communicator'
 
 module NodeSpec
-  module ConnectionAdapters
-    describe WinrmConnection do
+  module CommunicationAdapters
+    describe WinrmCommunicator do
       let(:rspec_configuration) {double('rspec configuration')}
       shared_examples 'creating new session' do |hostname, port, transport, options|
         before do
@@ -24,19 +24,19 @@ module NodeSpec
         end
 
         context 'default port and transport' do
-          let(:subject) {WinrmConnection.new('test.host.name', 'foo' => 'bar')}
+          let(:subject) {WinrmCommunicator.new('test.host.name', 'foo' => 'bar')}
           include_examples 'creating new session', 'test.host.name', 5985, :plaintext, {foo: 'bar', disable_sspi: true}
         end
 
         context 'custom port and transport' do
-          let(:subject) {WinrmConnection.new('test.host.name', 'port' => 1234, 'transport' => 'test_transport', 'foo' => 'bar')}
+          let(:subject) {WinrmCommunicator.new('test.host.name', 'port' => 1234, 'transport' => 'test_transport', 'foo' => 'bar')}
           include_examples 'creating new session', 'test.host.name', 1234, :test_transport, {foo: 'bar'}
         end
       end
 
       describe 'binding to configuration' do
         let(:winrm_session) {double('winrm session')}
-        let(:subject) { WinrmConnection.new(
+        let(:subject) { WinrmCommunicator.new(
           'test.host.name', 'port' => 1234, 'transport' => 'test_transport', foo: 'bar', 'baz' => 'quaz')
         }
 
@@ -77,7 +77,7 @@ module NodeSpec
       end
 
       it 'is a Remote connection' do
-        expect(WinrmConnection.new('test.host.name', {})).to be_a(Remote)
+        expect(WinrmCommunicator.new('test.host.name', {})).to be_a(Remote)
       end
     end
   end

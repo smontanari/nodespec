@@ -1,7 +1,7 @@
-require 'nodespec/connection_adapters/no_connection'
+require 'nodespec/communication_adapters/no_connection'
 
 module NodeSpec
-  module ConnectionAdapters
+  module CommunicationAdapters
     describe NoConnection do
       it 'is a Local connection' do
         expect(NoConnection.new).to be_a(Local)

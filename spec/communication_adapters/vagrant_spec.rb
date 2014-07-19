@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'nodespec/connection_adapters/vagrant'
+require 'nodespec/communication_adapters/vagrant'
 
 module NodeSpec
-  module ConnectionAdapters
+  module CommunicationAdapters
     describe Vagrant do
       [['test_vm'], ['test_node', {'vm_name' => 'test_vm'}]].each do |args|
         describe "initialization" do
@@ -40,7 +40,7 @@ Host test_vm
 EOS
             }
 
-            include_examples 'valid_ssh_connection', 'test.host.name', {
+            include_examples 'valid_ssh_communicator', 'test.host.name', {
               'user' => 'testuser',
               'port' => 1234,
               'keys' => '/test/path/private_key'

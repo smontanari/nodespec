@@ -1,7 +1,7 @@
-require 'nodespec/connection_adapters/local'
+require 'nodespec/communication_adapters/local'
 
 module NodeSpec
-  module ConnectionAdapters
+  module CommunicationAdapters
     describe Local do
       let(:subject) {Object.new.extend Local}
 

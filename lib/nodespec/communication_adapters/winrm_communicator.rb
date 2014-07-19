@@ -3,8 +3,8 @@ require 'nodespec/runtime_gem_loader'
 require_relative 'remote'
 
 module NodeSpec
-  module ConnectionAdapters
-    class WinrmConnection
+  module CommunicationAdapters
+    class WinrmCommunicator
       include Remote
       include VerboseOutput
       DEFAULT_PORT = 5985

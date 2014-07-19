@@ -1,9 +1,9 @@
 require 'aws-sdk'
 require 'spec_helper'
-require 'nodespec/connection_adapters/aws_ec2'
+require 'nodespec/communication_adapters/aws_ec2'
 
 module NodeSpec
-  module ConnectionAdapters
+  module CommunicationAdapters
     describe AwsEc2 do
       let(:ec2_instance) {double('ec2 instance')}
 
@@ -24,18 +24,18 @@ module NodeSpec
           context "#{connection} connection" do
             context 'instance name from the node name' do
               let(:subject) {AwsEc2.new('test-instance', connection => {'foo' => 'bar'})}
-              include_examples "valid_#{connection}_connection", 'test hostname', 'foo' => 'bar'
+              include_examples "valid_#{connection}_communicator", 'test hostname', 'foo' => 'bar'
             end
             context "instance name from the options" do
               let(:subject) {AwsEc2.new('test_node', 'instance' => 'test-instance', connection => {'foo' => 'bar'})}
-              include_examples "valid_#{connection}_connection", 'test hostname', 'foo' => 'bar'
+              include_examples "valid_#{connection}_communicator", 'test hostname', 'foo' => 'bar'
             end
           end
         end
 
         describe 'openssh default connection' do
           let(:subject) {AwsEc2.new('test-instance', {})}
-          include_examples "valid_ssh_connection", 'test hostname', {}
+          include_examples "valid_ssh_communicator", 'test hostname', {}
         end
       end
 

@@ -1,15 +1,15 @@
 require 'open3'
-require_relative 'ssh_connection'
+require_relative 'ssh_communicator'
 
 module NodeSpec
-  module ConnectionAdapters
+  module CommunicationAdapters
     class Vagrant
       attr_reader :connection
       
       def initialize(node_name, options = {})
         vm_name = options['vm_name'] || node_name
         fetch_connection_details(vm_name) do |host, opts|
-          @connection = SshConnection.new(host, opts)
+          @connection = SshCommunicator.new(host, opts)
         end
       end
 

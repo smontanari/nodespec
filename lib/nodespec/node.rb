@@ -1,6 +1,6 @@
 require 'specinfra/helper'
-require 'nodespec/connection_adapters'
-require 'nodespec/connection_adapters/no_connection'
+require 'nodespec/communication_adapters'
+require 'nodespec/communication_adapters/no_connection'
 
 module NodeSpec
   class Node
@@ -15,10 +15,10 @@ module NodeSpec
       @os = options.delete('os')
       adapter_name = options.delete('adapter')
       if adapter_name
-        adapter = ConnectionAdapters.get(node_name, adapter_name, options)
+        adapter = CommunicationAdapters.get(node_name, adapter_name, options)
         @connection = adapter.connection
       else
-        @connection = ConnectionAdapters::NoConnection.new
+        @connection = CommunicationAdapters::NoConnection.new
       end
       @backend_proxy = @connection.backend_proxy(@os)
     end

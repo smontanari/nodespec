@@ -1,8 +1,8 @@
-require 'nodespec/connection_adapters/ssh_connection'
+require 'nodespec/communication_adapters/ssh_communicator'
 
 module NodeSpec
-  module ConnectionAdapters
-    describe SshConnection do
+  module CommunicationAdapters
+    describe SshCommunicator do
       let(:rspec_configuration) {double('rspec configuration')}
       let(:ssh_session) {double('ssh session')}
 
@@ -78,7 +78,7 @@ module NodeSpec
       end
 
       context 'with given credentials' do
-        let(:subject) {SshConnection.new('test.host.name', 'port' => 1234, 'user' => 'testuser', 'password' => 'testpassword', 'keys' => 'testkeys')}
+        let(:subject) {SshCommunicator.new('test.host.name', 'port' => 1234, 'user' => 'testuser', 'password' => 'testpassword', 'keys' => 'testkeys')}
         before do
           allow(Net::SSH).to receive(:configuration_for).and_return({})
         end
@@ -86,7 +86,7 @@ module NodeSpec
       end
 
       context 'credentials from OpenSSH config files' do
-        let(:subject) {SshConnection.new('test.host.name', 'port' => 1234, 'user' => 'testuser')}
+        let(:subject) {SshCommunicator.new('test.host.name', 'port' => 1234, 'user' => 'testuser')}
         before do
           allow(Net::SSH).to receive(:configuration_for).with('test.host.name').and_return(password: 'testpassword', keys: 'testkeys')
         end
@@ -95,7 +95,7 @@ module NodeSpec
       end
 
       it 'is a Remote connection' do
-        expect(SshConnection.new('test.host.name', {})).to be_a(Remote)
+        expect(SshCommunicator.new('test.host.name', {})).to be_a(Remote)
       end
     end
   end

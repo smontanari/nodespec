@@ -84,7 +84,7 @@ module NodeSpec
 
     context 'no adapter' do
       before do
-        allow(ConnectionAdapters::NoConnection).to receive(:new).and_return(connection)
+        allow(CommunicationAdapters::NoConnection).to receive(:new).and_return(connection)
       end
 
       context 'no options' do
@@ -112,7 +112,7 @@ module NodeSpec
     context 'options with adapter' do
       let(:adapter) {double('adapter')}
       before do
-        allow(ConnectionAdapters).to receive(:get).with('test_node', 'test_adapter', 'foo' => 'bar').and_return(adapter)
+        allow(CommunicationAdapters).to receive(:get).with('test_node', 'test_adapter', 'foo' => 'bar').and_return(adapter)
         allow(adapter).to receive(:connection).and_return(connection)
         allow(connection).to receive(:session).and_return('remote session')
       end

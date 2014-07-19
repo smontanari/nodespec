@@ -1,15 +1,15 @@
 require 'net/ssh'
-require_relative 'ssh_connection'
+require_relative 'ssh_communicator'
 
 module NodeSpec
-  module ConnectionAdapters
+  module CommunicationAdapters
     class Ssh
       attr_reader :connection
 
       def initialize(node_name, options = {})
         opts = options.dup
         host = opts.delete('host') || node_name
-        @connection = SshConnection.new(host, opts)
+        @connection = SshCommunicator.new(host, opts)
       end
     end
   end

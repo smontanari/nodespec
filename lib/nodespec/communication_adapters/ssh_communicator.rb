@@ -3,8 +3,8 @@ require 'nodespec/verbose_output'
 require_relative 'remote'
 
 module NodeSpec
-  module ConnectionAdapters
-    class SshConnection
+  module CommunicationAdapters
+    class SshCommunicator
       include VerboseOutput
       include Remote
       attr_reader :session

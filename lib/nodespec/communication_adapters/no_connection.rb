@@ -2,7 +2,7 @@ require 'nodespec/verbose_output'
 require_relative 'local'
 
 module NodeSpec
-  module ConnectionAdapters
+  module CommunicationAdapters
     class NoConnection
       include Local
       include VerboseOutput
