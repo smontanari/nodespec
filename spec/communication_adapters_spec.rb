@@ -9,12 +9,21 @@ module NodeSpec
       'aws_ec2' => CommunicationAdapters::AwsEc2,
       'winrm'   => CommunicationAdapters::Winrm
     }.each do |adapter_name, adapter_class|
-      it "returns an instance of #{adapter_class}" do
-        expect(adapter_class).to receive(:new).with('test_node', 'adapter_options' => 'test_options').and_return('adapter')
-        adapter = CommunicationAdapters.get('test_node', adapter_name, 'adapter_options' => 'test_options')
+      it "retrieves a communicator from #{adapter_class}" do
+        expect(adapter_class).to receive(:communicator_for).with('test_node', 'test_os', 'adapter_options' => 'test_options').and_return('communicator')
 
-        expect(adapter).to eq('adapter')
+        communicator = CommunicationAdapters.get_communicator('test_node', 'test_os', adapter_name, 'adapter_options' => 'test_options')
+
+        expect(communicator).to eq('communicator')
       end
+    end
+
+    it 'defaults to a NativeCommunicator' do
+      expect(CommunicationAdapters::NativeCommunicator).to receive(:new).with('test_os').and_return('communicator')
+
+      communicator = CommunicationAdapters.get_communicator('test_node', 'test_os', nil)
+
+      expect(communicator).to eq('communicator')
     end
   end
 end

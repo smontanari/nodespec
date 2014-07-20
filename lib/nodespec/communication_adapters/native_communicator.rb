@@ -1,11 +1,17 @@
 require 'nodespec/verbose_output'
-require_relative 'local'
+require_relative 'local_backend'
 
 module NodeSpec
   module CommunicationAdapters
     class NativeCommunicator
-      include Local
+      include LocalBackend
       include VerboseOutput
+
+      attr_reader :os
+
+      def initialize(os = nil)
+        @os = os
+      end
 
       def bind_to(configuration)
         if configuration.ssh

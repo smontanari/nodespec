@@ -1,19 +1,20 @@
 require 'nodespec/verbose_output'
 require 'nodespec/runtime_gem_loader'
-require_relative 'remote'
+require_relative 'remote_backend'
 
 module NodeSpec
   module CommunicationAdapters
     class WinrmCommunicator
-      include Remote
+      include RemoteBackend
       include VerboseOutput
       DEFAULT_PORT = 5985
       DEFAULT_TRANSPORT = :plaintext
       DEFAULT_TRANSPORT_OPTIONS = {disable_sspi: true}
       
-      attr_reader :session
+      attr_reader :session, :os
 
-      def initialize(hostname, options = {})
+      def initialize(hostname, os = nil, options = {})
+        @os = os
         opts = options.dup
         port = opts.delete('port') || DEFAULT_PORT
         @endpoint = "http://#{hostname}:#{port}/wsman"

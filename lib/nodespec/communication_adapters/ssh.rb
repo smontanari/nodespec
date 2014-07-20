@@ -4,12 +4,10 @@ require_relative 'ssh_communicator'
 module NodeSpec
   module CommunicationAdapters
     class Ssh
-      attr_reader :communicator
-
-      def initialize(node_name, options = {})
+      def self.communicator_for(node_name, os = nil, options = {})
         opts = options.dup
         host = opts.delete('host') || node_name
-        @communicator = SshCommunicator.new(host, opts)
+        SshCommunicator.new(host, os, opts)
       end
     end
   end

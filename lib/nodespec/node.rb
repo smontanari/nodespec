@@ -13,11 +13,12 @@ module NodeSpec
       @name = validate(node_name)
       opts = (options || {}).dup
       @os = opts.delete('os')
-      @communicator = init_communicator(node_name, opts)
+      adapter_name = opts.delete('adapter')
+      @communicator = CommunicationAdapters.get_communicator(@name, @os, adapter_name, opts)
     end
 
     def backend
-      @communicator.backend(@os)
+      @communicator.backend
     end
 
     [:create_directory, :create_file].each do |met|
@@ -44,21 +45,12 @@ module NodeSpec
     private
 
     def backend_proxy
-      @backend_proxy ||= @communicator.backend_proxy(@os)
+      @backend_proxy ||= @communicator.backend_proxy
     end
 
     def validate(name)
       raise BadNodeNameError.new unless name =~ /^[a-zA-Z0-9][a-zA-Z0-9. \-_]+\s*$/
       name.strip.gsub(' ', '-')
-    end
-
-    def init_communicator(node_name, options)
-      adapter_name = options.delete('adapter')
-      if adapter_name
-        CommunicationAdapters.get(node_name, adapter_name, options).communicator
-      else
-        CommunicationAdapters::NativeCommunicator.new
-      end
     end
   end
 end

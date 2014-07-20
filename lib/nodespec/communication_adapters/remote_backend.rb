@@ -2,12 +2,12 @@ require 'nodespec/backends'
 
 module NodeSpec
   module CommunicationAdapters
-    module Remote
-      def backend_proxy(os = nil)
-        BackendProxy.const_get(backend(os)).new(session)
+    module RemoteBackend
+      def backend_proxy
+        BackendProxy.const_get(backend).new(session)
       end
 
-      def backend(os = nil)
+      def backend
         os == 'Windows' ? Backends::WinRM : Backends::Ssh
       end
     end

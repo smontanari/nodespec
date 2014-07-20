@@ -2,12 +2,12 @@ require 'nodespec/backends'
 
 module NodeSpec
   module CommunicationAdapters
-    module Local
-      def backend_proxy(os = nil)
-        BackendProxy.const_get(backend(os)).new
+    module LocalBackend
+      def backend_proxy
+        BackendProxy.const_get(backend).new
       end
 
-      def backend(os = nil)
+      def backend
         os == 'Windows' ? Backends::Cmd : Backends::Exec
       end
     end

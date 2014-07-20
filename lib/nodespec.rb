@@ -15,15 +15,15 @@ module NodeSpec
   end
 end
 
-RSpec.configure do |c|
-  c.before :all do |eg|
+RSpec.configure do |config|
+  config.before :all do |eg|
     NodeSpec.set_current_node(eg.class.description, eg.class.metadata[:node_config]) do |node|
-      c.os = node.os
-      node.communicator.bind_to(c) 
+      config.os = node.os
+      node.communicator.bind_to(config) 
     end 
   end
 
-  c.before :each do
+  config.before :each do
     subject_type = subject.class.name.rpartition('::').first
     if subject_type == Serverspec::Type.name
       subject.extend SpecInfra::Helper.const_get(NodeSpec.current_node.backend)
@@ -31,5 +31,5 @@ RSpec.configure do |c|
     end
   end
 
-  c.include(NodeSpec::Provisioning)
+  config.include(NodeSpec::Provisioning)
 end

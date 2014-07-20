@@ -3,8 +3,16 @@ require 'nodespec/communication_adapters/native_communicator'
 module NodeSpec
   module CommunicationAdapters
     describe NativeCommunicator do
-      it 'is a Local connection' do
-        expect(NativeCommunicator.new).to be_a(Local)
+      it 'provides a local backend' do
+        expect(NativeCommunicator.new).to be_a(LocalBackend)
+      end
+
+      describe '#initialize' do
+        [nil, 'Test OS'].each do |os|
+          it 'holds the os information' do
+            expect(NativeCommunicator.new(os).os).to eq os
+          end
+        end
       end
 
       describe '#bind_to' do

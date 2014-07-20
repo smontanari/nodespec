@@ -4,8 +4,8 @@ require 'nodespec/communication_adapters/vagrant'
 module NodeSpec
   module CommunicationAdapters
     describe Vagrant do
-      [['test_vm'], ['test_node', {'vm_name' => 'test_vm'}]].each do |args|
-        describe "initialization" do
+      [['test_vm', 'test_os'], ['test_node', 'test_os', {'vm_name' => 'test_vm'}]].each do |args|
+        describe "#communicator_for" do
           let(:cmd_status) { double('status') }
 
           before(:each) do
@@ -20,7 +20,7 @@ module NodeSpec
             it 'raises an error' do
               allow(cmd_status).to receive(:success?).and_return(false)
 
-              expect {Vagrant.new(*args)}.to raise_error 'Vagrant::Errors::SSHNotReady,The provider...'
+              expect {Vagrant.communicator_for(*args)}.to raise_error 'Vagrant::Errors::SSHNotReady,The provider...'
             end
           end
 
@@ -40,14 +40,17 @@ Host test_vm
 EOS
             }
 
-            include_examples 'valid_ssh_communicator', 'test.host.name', {
+            include_context 'new_ssh_communicator', 'test.host.name', 'test_os', {
               'user' => 'testuser',
               'port' => 1234,
               'keys' => '/test/path/private_key'
             } do
-              let(:subject) {subject = Vagrant.new(*args)}
               before do
                 allow(cmd_status).to receive(:success?).and_return(true)
+              end
+
+              it 'returns and ssh communicator initialized from the vagrant command output' do
+                expect(Vagrant.communicator_for(*args)).to eq('ssh communicator')
               end
             end
           end

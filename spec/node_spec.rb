@@ -50,12 +50,7 @@ module NodeSpec
     end
 
     let(:communicator) {double('communicator')}
-    let(:rspec_subject) {double('rspec subject')}
     let(:backend_proxy) {double('backend_proxy')}
-
-    before do
-      allow(communicator).to receive(:backend_proxy).and_return(backend_proxy)
-    end
 
     it 'does not change the original options' do
       Node.new('test_node', {'os' => 'test', 'foo' => 'bar'}.freeze)
@@ -82,59 +77,32 @@ module NodeSpec
       end
     end
 
-    context 'no adapter' do
-      before do
-        allow(CommunicationAdapters::NativeCommunicator).to receive(:new).and_return(communicator)
-      end
-
-      context 'no options' do
-        let(:subject) {Node.new('test_node')}
-
-        include_examples 'node os', nil
-        include_examples 'run commands'
-      end
-
-      context 'options with unix-like os' do
-        let(:subject) {Node.new('test_node', 'os' => 'Solaris')}
-        
-        include_examples 'node os', 'Solaris'
-        include_examples 'run commands'
-      end
-
-      context 'options with windows os' do
-        let(:subject) {Node.new('test_node', 'os' => 'Windows')}
-
-        include_examples 'node os', 'Windows'
-        include_examples 'run commands'
-      end
-    end
-
-    context 'options with adapter' do
+    describe 'running commands through the communicator' do
       let(:adapter) {double('adapter')}
       before do
-        allow(CommunicationAdapters).to receive(:get).with('test_node', 'test_adapter', 'foo' => 'bar').and_return(adapter)
-        allow(adapter).to receive(:communicator).and_return(communicator)
         allow(communicator).to receive(:session).and_return('remote session')
+        allow(communicator).to receive(:backend_proxy).and_return(backend_proxy)
       end
 
       context 'no os given' do
         let(:subject) {Node.new('test_node', 'adapter' => 'test_adapter', 'foo' => 'bar')}
 
+        before do
+          allow(CommunicationAdapters).to receive(:get_communicator).with('test_node', nil, 'test_adapter', 'foo' => 'bar').and_return(communicator)
+        end
+
         include_examples 'node os', nil
         include_examples 'run commands'
       end
 
-      context 'unix-like os given' do
-        let(:subject) {Node.new('test_node', 'os' => 'Solaris', 'adapter' => 'test_adapter', 'foo' => 'bar')}
+      context 'os given' do
+        let(:subject) {Node.new('test_node', 'os' => 'test_os', 'adapter' => 'test_adapter', 'foo' => 'bar')}
 
-        include_examples 'node os', 'Solaris'
-        include_examples 'run commands'
-      end
+        before do
+          allow(CommunicationAdapters).to receive(:get_communicator).with('test_node', 'test_os', 'test_adapter', 'foo' => 'bar').and_return(communicator)
+        end
 
-      context 'windows os given' do
-        let(:subject) {Node.new('test_node', 'os' => 'Windows', 'adapter' => 'test_adapter', 'foo' => 'bar')}
-
-        include_examples 'node os', 'Windows'
+        include_examples 'node os', 'test_os'
         include_examples 'run commands'
       end
     end
