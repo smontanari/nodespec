@@ -1,5 +1,6 @@
 require 'shellwords'
 require 'tempfile'
+require 'json'
 require 'erb'
 require 'nodespec/local_command_runner'
 
@@ -18,6 +19,7 @@ EOS
         @node = node
         @sudo_enabled = true
         @cmd_prefix_entries = []
+        @tmp_files = []
       end
 
       def set_config_path(path)
@@ -46,6 +48,10 @@ EOS
         @sudo_enabled = enabled
       end
 
+      def set_extra_vars(vars = {})
+        @extra_vars_option = "-e '#{JSON.generate(vars)}'"
+      end
+
       def ansible_execute_playbook(playbook_path, options = [])
         build_and_run("ansible-playbook #{playbook_path.shellescape} -l #{@node.name}", options)
       end
@@ -66,9 +72,12 @@ EOS
           "-u #{ssh_session.options[:user]}",
           "--private-key=#{key_option.shellescape}",
           sudo_option(ssh_session.options[:user]),
-          "#{options.join(' ')}"
+          "#{options.join(' ')}",
+          @extra_vars_option
           ].compact.join(' ')
-          run_command(cmd)
+        
+        run_command(cmd)
+        @tmp_files.each(&:close!)
       end
 
       def sudo_option(user)
@@ -79,6 +88,7 @@ EOS
         Tempfile.new(filename).tap do |f|
           f.write(content)
           f.flush
+          @tmp_files << f
         end
       end
     end
