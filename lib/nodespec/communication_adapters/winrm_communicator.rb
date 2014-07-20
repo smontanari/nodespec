@@ -30,16 +30,33 @@ module NodeSpec
       end
 
       def bind_to(configuration)
+        if configuration.ssh
+          close_ssh_session(configuration.ssh)
+          configuration.ssh = nil
+        end
+
         current_session = configuration.winrm
         if current_session.nil? || current_session.endpoint != @endpoint
-          RuntimeGemLoader.require_or_fail('winrm') do
-            verbose_puts "\nConnecting to #{@endpoint}..."
-            current_session = WinRM::WinRMWebService.new(@endpoint, @transport, @options)
-          end
-
+          current_session = start_winrm_session
           configuration.winrm = current_session
         end
         @session = current_session
+      end
+
+      private
+
+      def close_ssh_session(session)
+        msg = "\nClosing connection to #{session.host}"
+        msg << ":#{session.options[:port]}" if session.options[:port]
+        verbose_puts msg
+        session.close
+      end
+
+      def start_winrm_session
+        RuntimeGemLoader.require_or_fail('winrm') do
+          verbose_puts "\nConnecting to #{@endpoint}..."
+          WinRM::WinRMWebService.new(@endpoint, @transport, @options)
+        end
       end
     end
   end

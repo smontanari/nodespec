@@ -20,6 +20,7 @@ module NodeSpec
           verbose_puts msg
           configuration.ssh.close
           configuration.ssh = nil
+          verbose_puts "\nRunning on local host..."
         end
 
         if configuration.winrm

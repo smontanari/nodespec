@@ -20,23 +20,34 @@ module NodeSpec
       end
 
       def bind_to(configuration)
+        configuration.winrm = nil if configuration.winrm
         current_session = configuration.ssh
-        if current_session && (current_session.host != @host || current_session.options[:port] != @ssh_options[:port])
-          msg = "\nClosing connection to #{current_session.host}"
-          msg << ":#{current_session.options[:port]}" if current_session.options[:port]
-          verbose_puts msg
-          current_session.close
-        end
+
+        close_ssh_session(current_session) if current_session && (current_session.host != @host || current_session.options[:port] != @ssh_options[:port])
+
         if current_session.nil? || current_session.closed?
-          msg = "\nConnecting to #{@host}"
-          msg << ":#{@ssh_options[:port]}" if @ssh_options[:port]
-          msg << " as #{@user}..."
-          verbose_puts msg
-          current_session = Net::SSH.start(@host, @user, @ssh_options)
+          current_session = start_new_ssh_session
           configuration.host = @host
           configuration.ssh = current_session
         end
         @session = current_session
+      end
+
+      private
+
+      def close_ssh_session(session)
+        msg = "\nClosing connection to #{session.host}"
+        msg << ":#{session.options[:port]}" if session.options[:port]
+        verbose_puts msg
+        session.close
+      end
+
+      def start_new_ssh_session
+        msg = "\nConnecting to #{@host}"
+        msg << ":#{@ssh_options[:port]}" if @ssh_options[:port]
+        msg << " as #{@user}..."
+        verbose_puts msg
+        Net::SSH.start(@host, @user, @ssh_options)
       end
     end
   end
