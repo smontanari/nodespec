@@ -14,11 +14,14 @@ module NodeSpec
     end
 
     def get(node_name, options = nil)
-      if options.is_a? String
+      case options
+      when String
         raise "Cannot find nodespec settings '#{options}'" unless @predefined_settings.key?(options)
         opts = @predefined_settings[options]
-      else
+      when Hash
         opts = options
+      else
+        opts = {}
       end
       Node.new(node_name, opts)
     end

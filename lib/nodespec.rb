@@ -17,10 +17,12 @@ end
 
 RSpec.configure do |config|
   config.before :all do |eg|
-    NodeSpec.set_current_node(eg.class.description, eg.class.metadata[:node_config]) do |node|
-      config.os = node.os
-      node.communicator.bind_to(config) 
-    end 
+    if eg.class.metadata.key?(:nodespec)
+      NodeSpec.set_current_node(eg.class.description, eg.class.metadata[:nodespec]) do |node|
+        config.os = node.os
+        node.communicator.bind_to(config) 
+      end 
+    end
   end
 
   config.before :each do
