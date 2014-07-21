@@ -9,6 +9,7 @@ module NodeSpec
         before do
           allow(WinRM::WinRMWebService).to receive(:new).with("http://#{hostname}:#{port}/wsman", transport, options).and_return('new session')
           expect(rspec_configuration).to receive(:winrm=).with('new session')
+          expect(rspec_configuration).to receive(:host=).with(hostname)
         end
 
         it 'creates and holds a new session' do
@@ -85,6 +86,7 @@ module NodeSpec
           it 'does not change the current rspec configuration' do
             expect(WinRM::WinRMWebService).not_to receive(:new)
             expect(rspec_configuration).not_to receive(:winrm=)
+            expect(rspec_configuration).not_to receive(:host=)
       
             subject.bind_to(rspec_configuration)
 

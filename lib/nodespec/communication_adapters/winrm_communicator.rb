@@ -15,6 +15,7 @@ module NodeSpec
 
       def initialize(hostname, os = nil, options = {})
         @os = os
+        @hostname = hostname
         opts = options.dup
         port = opts.delete('port') || DEFAULT_PORT
         @endpoint = "http://#{hostname}:#{port}/wsman"
@@ -39,6 +40,7 @@ module NodeSpec
         if current_session.nil? || current_session.endpoint != @endpoint
           current_session = start_winrm_session
           configuration.winrm = current_session
+          configuration.host = @hostname
         end
         @session = current_session
       end
