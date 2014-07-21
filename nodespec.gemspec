@@ -10,16 +10,17 @@ Gem::Specification.new do |gem|
   gem.description   = <<-eos
 This gem sits on top of Serverspec and features:
   - Supports different os types (Windows/UN*X) and backends (SSH, WinRM) at the same time.
-  - Supports multiple containers (Vagrant, Amazon EC2)
+  - Supports testing against Vagrant boxes and Amazon EC2 instances
   - Ability to run provisioning instructions (chef, puppet, ansible, shell) as part of the test setup.
   eos
   
   gem.authors       = ['Silvio Montanari']
-  gem.email         = 'montanari.silvio@gmail.com'
   gem.files         = `git ls-files`.split($/)
   gem.files         = Dir['lib/*']
   gem.test_files    = gem.files.grep(%r{^spec/})
   gem.require_paths = ['lib']
+
+  gem.required_ruby_version = '>= 1.9.3'
 
   gem.add_runtime_dependency 'net-ssh'
   gem.add_runtime_dependency 'serverspec'
