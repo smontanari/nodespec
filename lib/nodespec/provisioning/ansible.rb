@@ -52,11 +52,11 @@ EOS
         @extra_vars_option = "-e '#{JSON.generate(vars)}'"
       end
 
-      def ansible_execute_playbook(playbook_path, options = [])
+      def ansible_playbook(playbook_path, options = [])
         build_and_run("ansible-playbook #{playbook_path.shellescape} -l #{@node.name}", options)
       end
 
-      def ansible_execute_module(module_name, module_arguments, options = [])
+      def ansible_module(module_name, module_arguments, options = [])
         build_and_run("ansible #{@node.name} -m #{module_name} -a #{module_arguments.shellescape}", options)
       end
 

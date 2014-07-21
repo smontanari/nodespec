@@ -24,13 +24,13 @@ module NodeSpec
 
       describe 'executing an ansible playbook' do
         it_executes_the_local_command('ansible-playbook /path\ to/playbook -l test_host -u test_user --private-key=path/to\ user/key --sudo --opt1 --opt2') do
-          ansible_execute_playbook '/path to/playbook', %w[--opt1 --opt2]
+          ansible_playbook '/path to/playbook', %w[--opt1 --opt2]
         end
 
         describe 'setting playbook variables' do
           it_executes_the_local_command(/^ansible-playbook .* -e '\{"pacman":"mrs","ghosts":\["inky","pinky","clyde","sue"\]\}'$/) do
             set_extra_vars pacman: 'mrs', ghosts: %w[inky pinky clyde sue]
-            ansible_execute_playbook '/path to/playbook'
+            ansible_playbook '/path to/playbook'
           end
         end
       end
@@ -43,7 +43,7 @@ module NodeSpec
         end
 
         it_executes_the_local_command('ansible test_host -m module -a module\ arguments -u test_user --private-key=path/to\ user/key --sudo --opt1 --opt2') do
-          ansible_execute_module 'module', 'module arguments', %w[--opt1 --opt2]
+          ansible_module 'module', 'module arguments', %w[--opt1 --opt2]
         end
 
         describe 'running ansible' do
@@ -55,21 +55,21 @@ module NodeSpec
               })
             end
             it_executes_the_local_command('ansible test_host -m module -a module\ arguments -u test_user --private-key=path/to\ user/key1,path/to\ user/key2 --sudo --opt1 --opt2') do
-              ansible_execute_module 'module', 'module arguments', %w[--opt1 --opt2]
+              ansible_module 'module', 'module arguments', %w[--opt1 --opt2]
             end
           end
 
           context 'disable sudo' do
             it_executes_the_local_command('ansible test_host -m module -a module\ arguments -u test_user --private-key=path/to\ user/key --opt1 --opt2') do
               run_as_sudo(false)
-              ansible_execute_module 'module', 'module arguments', %w[--opt1 --opt2]
+              ansible_module 'module', 'module arguments', %w[--opt1 --opt2]
             end
           end
 
           context 'enable sudo' do
             it_executes_the_local_command('ansible test_host -m module -a module\ arguments -u test_user --private-key=path/to\ user/key --sudo --opt1 --opt2') do
               run_as_sudo
-              ansible_execute_module 'module', 'module arguments', %w[--opt1 --opt2]
+              ansible_module 'module', 'module arguments', %w[--opt1 --opt2]
             end
           end
 
@@ -81,7 +81,7 @@ module NodeSpec
               })
             end
             it_executes_the_local_command('ansible test_host -m module -a module\ arguments -u root --private-key=path/to\ user/key --opt1 --opt2') do
-              ansible_execute_module 'module', 'module arguments', %w[--opt1 --opt2]
+              ansible_module 'module', 'module arguments', %w[--opt1 --opt2]
             end
           end
         end
@@ -89,7 +89,7 @@ module NodeSpec
         describe 'setting a path to an inventory' do
           it_executes_the_local_command(/^ansible test_host .* -i path\/to\\ custom\/hosts .*/) do
             set_hostfile_path 'path/to custom/hosts'
-            ansible_execute_module 'module', 'module arguments', %w[--opt1 --opt2]
+            ansible_module 'module', 'module arguments', %w[--opt1 --opt2]
           end
 
           describe 'enabling inventory host auto detection' do
@@ -98,7 +98,7 @@ module NodeSpec
 
               it_executes_the_local_command(/^ansible test_host .* -i \/path\/to\/inventory .*/) do
                 enable_host_auto_discovery
-                ansible_execute_module 'module', 'module arguments', %w[--opt1 --opt2]
+                ansible_module 'module', 'module arguments', %w[--opt1 --opt2]
               end
             end
   
@@ -110,7 +110,7 @@ eos
 
               it_executes_the_local_command(/^ansible test_host .* -i \/path\/to\/inventory .*/) do
                 enable_host_auto_discovery('test-group')
-                ansible_execute_module 'module', 'module arguments', %w[--opt1 --opt2]
+                ansible_module 'module', 'module arguments', %w[--opt1 --opt2]
               end
             end
           end
@@ -119,13 +119,13 @@ eos
         describe 'configuring ansible' do
           it_executes_the_local_command(/^ANSIBLE_HOST_KEY_CHECKING=False ansible .*/) do
             set_host_key_checking(false)
-            ansible_execute_module 'module', 'module arguments'
+            ansible_module 'module', 'module arguments'
           end
 
           it_executes_the_local_command(/^ANSIBLE_CONFIG=\/path\\ to\/config ANSIBLE_HOST_KEY_CHECKING=False ansible .*/) do
             set_config_path('/path to/config')
             set_host_key_checking(false)
-            ansible_execute_module 'module', 'module arguments'
+            ansible_module 'module', 'module arguments'
           end
 
           describe 'inline custom configuration' do
@@ -133,7 +133,7 @@ eos
 
             it_executes_the_local_command(/^ANSIBLE_CONFIG=\/path\/to\/cfg ansible .*/) do
               ansible_config('test config')
-              ansible_execute_module 'module', 'module arguments'
+              ansible_module 'module', 'module arguments'
             end
           end
         end
