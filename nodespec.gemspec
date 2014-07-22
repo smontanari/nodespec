@@ -7,14 +7,10 @@ Gem::Specification.new do |gem|
   gem.name          = 'nodespec'
   gem.version       = NodeSpec::VERSION
   gem.summary       = 'RSpec style tests for multiple nodes/server instances with support for provisioning instructions'
-  gem.description   = <<-eos
-This gem sits on top of Serverspec and features:
-  - Supports different os types (Windows/UN*X) and backends (SSH, WinRM) at the same time.
-  - Supports testing against Vagrant boxes and Amazon EC2 instances
-  - Ability to run provisioning instructions (chef, puppet, ansible, shell) as part of the test setup.
-  eos
+  gem.description   = 'RSpec style tests for multiple nodes/server instances with support for provisioning instructions'
   
   gem.authors       = ['Silvio Montanari']
+  gem.homepage      = 'https://github.com/smontanari/nodespec'
   gem.files         = `git ls-files`.split($/)
   gem.files         = Dir['lib/*']
   gem.test_files    = gem.files.grep(%r{^spec/})

@@ -6,14 +6,16 @@ RSpec style tests for multiple nodes/server instances with support for provision
 ## Nodespec vs Serverspec
 [Serverspec](http://serverspec.org) is a popular gem that allows you to write rspec tests to validate your servers/hosts configuration.
   
-Nodespec is not an alternative to Serverspec, rather it's build on top of it, so you can still leverage all of its features.
+Nodespec is not an alternative to Serverspec, rather it's build on top of it, so you can still leverage all of its features while enjoying some extra goodies.
 
 #### What's different
-Nodespec overcomes some of the limitations of Serverspecs, such as mixed OS' support (Windows and UN*X), multiple backends (Ssh and Winrm) and easy configurability and connectivity to your target hosts.
+Nodespec overcomes some of the limitations of Serverspec, such as mixed OS' support (Windows and UN*X), multiple backends (Ssh and Winrm) and easy configurability and connectivity to your target hosts.
 
 Nodespec enables a declarative way of configuring your remote connections, be it simple Ssh, a Vagrant box, or an Amazon EC2 instance.
 
 Nodespec adds support for issuing provisiong commands to your target hosts, that could be incorporated as part of your test setup.
+
+Below is a quick summary of the main features of nodespec. Refer to the [wiki](https://github.com/smontanari/nodespec/wiki) for more details and examples.
 
 ## Nodespec features
 

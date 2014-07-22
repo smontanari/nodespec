@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nodespec (0.1.8)
+    nodespec (0.1.9)
       net-ssh
       serverspec
       specinfra (>= 1.18.4)
@@ -65,7 +65,7 @@ GEM
       net-ssh
       rspec (>= 2.13.0)
       specinfra (>= 0.7.1)
-    specinfra (1.18.4)
+    specinfra (1.22.0)
     uuidtools (2.1.4)
     wasabi (1.0.0)
       nokogiri (>= 1.4.0)
