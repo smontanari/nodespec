@@ -12,7 +12,6 @@ Gem::Specification.new do |gem|
   gem.authors       = ['Silvio Montanari']
   gem.homepage      = 'https://github.com/smontanari/nodespec'
   gem.files         = `git ls-files`.split($/)
-  gem.files         = Dir['lib/*']
   gem.test_files    = gem.files.grep(%r{^spec/})
   gem.require_paths = ['lib']
 
