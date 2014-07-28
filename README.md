@@ -1,7 +1,9 @@
 nodespec
 ========
 
-RSpec style tests for multiple nodes/server instances with support for provisioning with puppet, chef, ansible
+RSpec style tests for multiple nodes/server instances with support for provisioning with puppet, chef, ansible.
+
+- [Documentation](https://github.com/smontanari/nodespec/wiki)
 
 ## Nodespec vs Serverspec
 [Serverspec](http://serverspec.org) is a popular gem that allows you to write rspec tests to validate your servers/hosts configuration.

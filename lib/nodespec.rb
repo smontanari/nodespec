@@ -20,8 +20,8 @@ RSpec.configure do |config|
     if eg.class.metadata.key?(:nodespec)
       NodeSpec.set_current_node(eg.class.description, eg.class.metadata[:nodespec]) do |node|
         config.os = node.os
-        node.communicator.bind_to(config) 
-      end 
+        node.communicator.bind_to(config)
+      end
     end
   end
 
