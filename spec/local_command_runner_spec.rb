@@ -13,13 +13,13 @@ module NodeSpec
 
     it 'returns true if the command succeeds' do
       allow(cmd_status).to receive(:success?).and_return(true)
-      
+
       expect(subject.run_command('test command')).to be_truthy
     end
 
     it 'returns false if the command fails' do
       allow(cmd_status).to receive(:success?).and_return(false)
-      
+
       expect(subject.run_command('test command')).to be_falsy
     end
   end

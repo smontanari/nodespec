@@ -8,11 +8,11 @@ Gem::Specification.new do |gem|
   gem.version       = NodeSpec::VERSION
   gem.summary       = 'RSpec style tests for multiple nodes/server instances with support for provisioning instructions'
   gem.description   = 'RSpec style tests for multiple nodes/server instances with support for provisioning instructions'
-  
+
   gem.authors       = ['Silvio Montanari']
   gem.homepage      = 'https://github.com/smontanari/nodespec'
   gem.license       = 'MIT'
-  
+
   gem.files         = `git ls-files`.split($/)
   gem.test_files    = gem.files.grep(%r{^spec/})
   gem.require_paths = ['lib']

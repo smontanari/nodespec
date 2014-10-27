@@ -11,11 +11,11 @@ module NodeSpec
 
     let(:subject) {Object.new.extend Provisioning}
     let(:provisioning_block) {Proc.new {}}
-    
+
     before do
       allow(NodeSpec).to receive(:current_node).and_return('current node')
     end
-    
+
     context 'multiple invocations to same provisioner' do
       let(:provisioner_instance){double('provisioner instance')}
       available_provisioners.each do |name, clazz|

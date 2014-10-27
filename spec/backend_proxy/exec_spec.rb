@@ -13,20 +13,20 @@ module NodeSpec
           allow(subject).to receive(:execute_within_timeout).with(actual_command).and_yield
         end
 
-        
+
         it 'returns true if the command succeeds' do
           allow(cmd_status).to receive(:success?).and_return(true)
-          
+
           expect(subject.execute(original_command)).to be_truthy
         end
 
         it 'returns false if the command fails' do
           allow(cmd_status).to receive(:success?).and_return(false)
-          
+
           expect(subject.execute(original_command)).to be_falsy
         end
       end
-      
+
       it_behaves_like 'a command run', 'test command', 'test command', false
       it_behaves_like 'a command run', 'test command', 'sudo test command', true
     end

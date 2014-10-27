@@ -13,7 +13,7 @@ module NodeSpec
         end
         it_behaves_like 'providing a backend', 'Exec'
       end
-      
+
       context 'UN*X os' do
         before do
           def subject.os

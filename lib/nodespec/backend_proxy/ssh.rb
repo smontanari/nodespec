@@ -5,7 +5,7 @@ module NodeSpec
   module BackendProxy
     class Ssh < Base
       include UnixshellUtility
-      
+
       ROOT_USER = 'root'
 
       def initialize(ssh)

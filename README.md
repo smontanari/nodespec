@@ -7,7 +7,7 @@ RSpec style tests for multiple nodes/server instances with support for provision
 
 ## Nodespec vs Serverspec
 [Serverspec](http://serverspec.org) is a popular gem that allows you to write rspec tests to validate your servers/hosts configuration.
-  
+
 Nodespec is not an alternative to Serverspec, rather it's build on top of it, so you can still leverage all of its features while enjoying some extra goodies.
 
 #### What's different
@@ -90,7 +90,7 @@ describe "server1", nodespec: {'adapter' => 'vagrant'} do
       puppet_apply_execute "include demo::wheel_users"
     end
   end
-...    
+...
 end
 ```
 

@@ -10,7 +10,7 @@ module NodeSpec
       DEFAULT_PORT = 5985
       DEFAULT_TRANSPORT = :plaintext
       DEFAULT_TRANSPORT_OPTIONS = {disable_sspi: true}
-      
+
       attr_reader :session, :os
 
       def initialize(hostname, os = nil, options = {})

@@ -11,40 +11,40 @@ module NodeSpec
     shared_examples 'run commands' do
       it "runs a command through the backend proxy" do
         expect(backend_proxy).to receive(:execute).with('test command')
-        
+
         subject.execute('test command')
       end
 
       it "creates a directory with a path relative to the temporary directory" do
         expect(backend_proxy).to receive(:temp_directory).ordered.and_return('/temp/dir')
         expect(backend_proxy).to receive(:create_directory).ordered.with('/temp/dir/test_dir')
-        
+
         expect(subject.create_temp_directory('test_dir')).to eq('/temp/dir/test_dir')
       end
 
       it "creates a directory with a path relative to the node working directory" do
         expect(backend_proxy).to receive(:create_directory).ordered.with('.nodespec')
         expect(backend_proxy).to receive(:create_directory).ordered.with('.nodespec/test_dir')
-        
+
         expect(subject.create_directory('test_dir')).to eq('.nodespec/test_dir')
       end
 
       it "writes to a file with a path relative to the node working directory" do
         expect(backend_proxy).to receive(:create_directory).ordered.with('.nodespec')
         expect(backend_proxy).to receive(:create_file).ordered.with('.nodespec/test/file', 'test content')
-        
+
         expect(subject.create_file('test/file', 'test content')).to eq('.nodespec/test/file')
       end
 
       it "creates a directory with an absolute path" do
         expect(backend_proxy).to receive(:create_directory).with('/test/dir')
-        
+
         expect(subject.create_directory('/test/dir')).to eq('/test/dir')
       end
 
       it "writes to a file with an absolute path" do
         expect(backend_proxy).to receive(:create_file).with('/test/file', 'test content')
-        
+
         expect(subject.create_file('/test/file', 'test content')).to eq('/test/file')
       end
     end
