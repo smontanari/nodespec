@@ -3,8 +3,8 @@ PATH
   specs:
     nodespec (0.1.10)
       net-ssh
-      serverspec
-      specinfra (>= 1.18.4)
+      serverspec (~> 0.15)
+      specinfra (~> 1.18)
 
 GEM
   remote: https://rubygems.org/
