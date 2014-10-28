@@ -3,8 +3,21 @@ require 'nodespec/communication_adapters/native_communicator'
 module NodeSpec
   module CommunicationAdapters
     describe NativeCommunicator do
-      it 'provides a local backend' do
-        expect(NativeCommunicator.new).to be_a(LocalBackend)
+      describe 'providing backend proxy' do
+        context 'non Windows os' do
+          before do
+            allow(OS).to receive(:windows?).and_return(false)
+          end
+          include_examples 'providing a backend', :exec, BackendProxy::Exec
+        end
+
+        context 'Windows os' do
+          before do
+            allow(OS).to receive(:windows?).and_return(true)
+          end
+
+          include_examples 'providing a backend', :cmd, BackendProxy::Cmd
+        end
       end
 
       describe '#initialize' do

@@ -1,11 +1,10 @@
 require 'nodespec/verbose_output'
 require 'nodespec/runtime_gem_loader'
-require_relative 'remote_backend'
+require 'nodespec/backend_proxy'
 
 module NodeSpec
   module CommunicationAdapters
     class WinrmCommunicator
-      include RemoteBackend
       include VerboseOutput
       DEFAULT_PORT = 5985
       DEFAULT_TRANSPORT = :plaintext
@@ -43,6 +42,14 @@ module NodeSpec
           configuration.host = @hostname
         end
         @session = current_session
+      end
+
+      def backend_proxy
+        BackendProxy.create(:winrm, @session)
+      end
+
+      def backend
+        :winrm
       end
 
       private

@@ -1,10 +1,10 @@
+require 'os'
 require 'nodespec/verbose_output'
-require_relative 'local_backend'
+require 'nodespec/backend_proxy'
 
 module NodeSpec
   module CommunicationAdapters
     class NativeCommunicator
-      include LocalBackend
       include VerboseOutput
 
       attr_reader :os
@@ -26,6 +26,14 @@ module NodeSpec
         if configuration.winrm
           configuration.winrm = nil
         end
+      end
+
+      def backend_proxy
+        BackendProxy.create(backend)
+      end
+
+      def backend
+        OS.windows? ? :cmd : :exec
       end
     end
   end

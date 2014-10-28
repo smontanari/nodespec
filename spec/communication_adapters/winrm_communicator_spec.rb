@@ -87,7 +87,7 @@ module NodeSpec
             expect(WinRM::WinRMWebService).not_to receive(:new)
             expect(rspec_configuration).not_to receive(:winrm=)
             expect(rspec_configuration).not_to receive(:host=)
-      
+
             subject.bind_to(rspec_configuration)
 
             expect(subject.session).to eq(winrm_session)
@@ -95,8 +95,9 @@ module NodeSpec
         end
       end
 
-      it 'provides a remote backend' do
-        expect(WinrmCommunicator.new('test.host.name')).to be_a(RemoteBackend)
+      describe 'providing backend proxy' do
+        subject {WinrmCommunicator.new('test.host.name')}
+        include_examples 'providing a backend', :winrm, BackendProxy::Winrm
       end
 
       describe '#initialize' do

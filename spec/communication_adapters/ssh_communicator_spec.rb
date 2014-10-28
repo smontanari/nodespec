@@ -108,16 +108,17 @@ module NodeSpec
         include_examples 'binding to configuration'
       end
 
-      it 'provides a remote backend' do
-        expect(SshCommunicator.new('test.host.name')).to be_a(RemoteBackend)
-      end
-
       describe '#initialize' do
         [nil, 'Test OS'].each do |os|
           it 'holds the os information' do
             expect(SshCommunicator.new('test.host.name', os, {}).os).to eq os
           end
         end
+      end
+
+      describe 'providing backend proxy' do
+        subject {SshCommunicator.new('test.host.name')}
+        include_examples 'providing a backend', :ssh, BackendProxy::Ssh
       end
     end
   end

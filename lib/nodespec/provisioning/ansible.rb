@@ -75,7 +75,7 @@ EOS
           "#{options.join(' ')}",
           @extra_vars_option
           ].compact.join(' ')
-        
+
         run_command(cmd)
         @tmp_files.each(&:close!)
       end

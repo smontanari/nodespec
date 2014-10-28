@@ -1,12 +1,11 @@
 require 'net/ssh'
 require 'nodespec/verbose_output'
-require_relative 'remote_backend'
+require 'nodespec/backend_proxy'
 
 module NodeSpec
   module CommunicationAdapters
     class SshCommunicator
       include VerboseOutput
-      include RemoteBackend
       attr_reader :session, :os
 
       def initialize(host, os = nil, options = {})
@@ -32,6 +31,14 @@ module NodeSpec
           configuration.ssh_options = current_session.options
         end
         @session = current_session
+      end
+
+      def backend_proxy
+        BackendProxy.create(:ssh, @session)
+      end
+
+      def backend
+        :ssh
       end
 
       private
