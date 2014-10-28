@@ -17,28 +17,28 @@ module NodeSpec
         before do
           allow(ec2_instance).to receive(:exists?).ordered.and_return(true)
           allow(ec2_instance).to receive(:status).ordered.and_return(:running)
-          allow(ec2_instance).to receive(:public_dns_name).ordered.and_return('test hostname')
+          allow(ec2_instance).to receive(:public_dns_name).ordered.and_return('test.host.name')
         end
 
         %w[ssh winrm].each do |connection|
           describe "#{connection} communicator" do
-            include_context "new_#{connection}_communicator", 'test hostname', 'test_os', 'foo' => 'bar'
+            include_context "new_#{connection}_communicator", 'test.host.name', 'foo' => 'bar'
 
             it 'returns communicator with the instance name from the node name' do
-              expect(AwsEc2.communicator_for('test-instance', 'test_os', connection => {'foo' => 'bar'})).to eq("#{connection} communicator")
+              expect(AwsEc2.communicator_for('test-instance', connection => {'foo' => 'bar'})).to eq("#{connection} communicator")
             end
 
             it 'returns communicator with the instance name from the options' do
-              expect(AwsEc2.communicator_for('test_node', 'test_os', 'instance' => 'test-instance', connection => {'foo' => 'bar'})).to eq("#{connection} communicator")
+              expect(AwsEc2.communicator_for('test_node', 'instance' => 'test-instance', connection => {'foo' => 'bar'})).to eq("#{connection} communicator")
             end
           end
         end
 
         describe 'openssh default connection' do
-          include_context "new_ssh_communicator", 'test hostname', 'test_os', {}
+          include_context "new_ssh_communicator", 'test.host.name', {}
 
           it 'returns an ssh communicator' do
-            expect(AwsEc2.communicator_for('test-instance', 'test_os')).to eq("ssh communicator")
+            expect(AwsEc2.communicator_for('test-instance')).to eq("ssh communicator")
           end
         end
       end
@@ -50,7 +50,7 @@ module NodeSpec
           end
 
           it 'raises an error' do
-            expect {AwsEc2.communicator_for('test-instance', 'test_os', 'foo' => 'bar')}.to raise_error
+            expect {AwsEc2.communicator_for('test-instance', 'foo' => 'bar')}.to raise_error
           end
         end
 
@@ -61,7 +61,7 @@ module NodeSpec
           end
 
           it 'raises an error' do
-            expect {AwsEc2.communicator_for('test-instance', 'test_os', 'foo' => 'bar')}.to raise_error
+            expect {AwsEc2.communicator_for('test-instance', 'foo' => 'bar')}.to raise_error
           end
         end
       end

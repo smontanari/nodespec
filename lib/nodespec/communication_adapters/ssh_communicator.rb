@@ -6,11 +6,10 @@ module NodeSpec
   module CommunicationAdapters
     class SshCommunicator
       include VerboseOutput
-      attr_reader :session, :os
+      attr_reader :session
 
-      def initialize(host, os = nil, options = {})
+      def initialize(host, options = {})
         @host = host
-        @os = os
         @ssh_options = Net::SSH.configuration_for(@host)
         @user = options['user'] || @ssh_options[:user]
         %w[port password keys].each do |param|

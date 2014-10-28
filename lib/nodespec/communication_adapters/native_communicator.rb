@@ -7,12 +7,6 @@ module NodeSpec
     class NativeCommunicator
       include VerboseOutput
 
-      attr_reader :os
-
-      def initialize(os = nil)
-        @os = os
-      end
-
       def bind_to(configuration)
         if configuration.ssh
           msg = "\nClosing connection to #{configuration.ssh.host}"

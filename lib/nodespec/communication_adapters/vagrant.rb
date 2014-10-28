@@ -4,10 +4,10 @@ require_relative 'ssh_communicator'
 module NodeSpec
   module CommunicationAdapters
     class Vagrant
-      def self.communicator_for(node_name, os = nil, options = {})
+      def self.communicator_for(node_name, options = {})
         vm_name = options['vm_name'] || node_name
         fetch_connection_details(vm_name) do |host, opts|
-          SshCommunicator.new(host, os, opts)
+          SshCommunicator.new(host, opts)
         end
       end
 

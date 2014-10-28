@@ -10,10 +10,9 @@ module NodeSpec
       DEFAULT_TRANSPORT = :plaintext
       DEFAULT_TRANSPORT_OPTIONS = {disable_sspi: true}
 
-      attr_reader :session, :os
+      attr_reader :session
 
-      def initialize(hostname, os = nil, options = {})
-        @os = os
+      def initialize(hostname, options = {})
         @hostname = hostname
         opts = options.dup
         port = opts.delete('port') || DEFAULT_PORT

@@ -4,7 +4,7 @@ require 'nodespec/communication_adapters/vagrant'
 module NodeSpec
   module CommunicationAdapters
     describe Vagrant do
-      [['test_vm', 'test_os'], ['test_node', 'test_os', {'vm_name' => 'test_vm'}]].each do |args|
+      [['test_vm', 'test_os'], ['test_node', {'vm_name' => 'test_vm'}]].each do |args|
         describe "#communicator_for" do
           let(:cmd_status) { double('status') }
 
@@ -40,7 +40,7 @@ Host test_vm
 EOS
             }
 
-            include_context 'new_ssh_communicator', 'test.host.name', 'test_os', {
+            include_context 'new_ssh_communicator', 'test.host.name', {
               'user' => 'testuser',
               'port' => 1234,
               'keys' => '/test/path/private_key'

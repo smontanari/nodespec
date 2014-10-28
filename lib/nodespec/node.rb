@@ -12,7 +12,7 @@ module NodeSpec
       opts = (options || {}).dup
       @os = opts.delete('os')
       adapter_name = opts.delete('adapter')
-      @communicator = CommunicationAdapters.get_communicator(@name, @os, adapter_name, opts)
+      @communicator = CommunicationAdapters.get_communicator(@name, adapter_name, opts)
     end
 
     def backend

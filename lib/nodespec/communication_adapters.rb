@@ -2,13 +2,13 @@ require 'nodespec/communication_adapters/native_communicator'
 
 module NodeSpec
   module CommunicationAdapters
-    def self.get_communicator(node_name, os = nil, adapter_name = nil, adapter_options = {})
+    def self.get_communicator(node_name, adapter_name = nil, adapter_options = {})
       if adapter_name
         require_relative "communication_adapters/#{adapter_name}.rb"
         clazz = adapter_class(adapter_name)
-        clazz.communicator_for(node_name, os, adapter_options)
+        clazz.communicator_for(node_name, adapter_options)
       else
-        NativeCommunicator.new(os)
+        NativeCommunicator.new
       end
     end
 

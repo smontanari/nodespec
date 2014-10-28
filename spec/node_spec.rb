@@ -88,7 +88,7 @@ module NodeSpec
         let(:subject) {Node.new('test_node', 'adapter' => 'test_adapter', 'foo' => 'bar')}
 
         before do
-          allow(CommunicationAdapters).to receive(:get_communicator).with('test_node', nil, 'test_adapter', 'foo' => 'bar').and_return(communicator)
+          allow(CommunicationAdapters).to receive(:get_communicator).with('test_node', 'test_adapter', 'foo' => 'bar').and_return(communicator)
         end
 
         include_examples 'node os', nil
@@ -99,7 +99,7 @@ module NodeSpec
         let(:subject) {Node.new('test_node', 'os' => 'test_os', 'adapter' => 'test_adapter', 'foo' => 'bar')}
 
         before do
-          allow(CommunicationAdapters).to receive(:get_communicator).with('test_node', 'test_os', 'test_adapter', 'foo' => 'bar').and_return(communicator)
+          allow(CommunicationAdapters).to receive(:get_communicator).with('test_node', 'test_adapter', 'foo' => 'bar').and_return(communicator)
         end
 
         include_examples 'node os', 'test_os'

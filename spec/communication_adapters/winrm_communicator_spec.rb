@@ -26,12 +26,12 @@ module NodeSpec
         end
 
         context 'default port and transport' do
-          let(:subject) {WinrmCommunicator.new('test.host.name', nil, 'foo' => 'bar')}
+          let(:subject) {WinrmCommunicator.new('test.host.name', 'foo' => 'bar')}
           include_examples 'creating new session', 'test.host.name', 5985, :plaintext, {foo: 'bar', disable_sspi: true}
         end
 
         context 'custom port and transport' do
-          let(:subject) {WinrmCommunicator.new('test.host.name', nil, 'port' => 1234, 'transport' => 'test_transport', 'foo' => 'bar')}
+          let(:subject) {WinrmCommunicator.new('test.host.name', 'port' => 1234, 'transport' => 'test_transport', 'foo' => 'bar')}
           include_examples 'creating new session', 'test.host.name', 1234, :test_transport, {foo: 'bar'}
         end
       end
@@ -39,7 +39,7 @@ module NodeSpec
       describe 'binding to configuration' do
         let(:winrm_session) {double('winrm session')}
         let(:subject) { WinrmCommunicator.new(
-          'test.host.name', nil, 'port' => 1234, 'transport' => 'test_transport', foo: 'bar', 'baz' => 'quaz')
+          'test.host.name', 'port' => 1234, 'transport' => 'test_transport', foo: 'bar', 'baz' => 'quaz')
         }
 
         before do
@@ -98,14 +98,6 @@ module NodeSpec
       describe 'providing backend proxy' do
         subject {WinrmCommunicator.new('test.host.name')}
         include_examples 'providing a backend', :winrm, BackendProxy::Winrm
-      end
-
-      describe '#initialize' do
-        [nil, 'Test OS'].each do |os|
-          it 'holds the os information' do
-            expect(WinrmCommunicator.new('test.host.name', os, {}).os).to eq os
-          end
-        end
       end
     end
   end

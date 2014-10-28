@@ -20,14 +20,6 @@ module NodeSpec
         end
       end
 
-      describe '#initialize' do
-        [nil, 'Test OS'].each do |os|
-          it 'holds the os information' do
-            expect(NativeCommunicator.new(os).os).to eq os
-          end
-        end
-      end
-
       describe '#bind_to' do
         let(:rspec_configuration) {double('rspec configuration')}
 
