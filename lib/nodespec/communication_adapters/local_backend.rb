@@ -1,14 +1,14 @@
-require 'nodespec/backends'
+require 'nodespec/backend_proxy'
 
 module NodeSpec
   module CommunicationAdapters
     module LocalBackend
       def backend_proxy
-        BackendProxy.const_get(backend).new
+        BackendProxy.create(backend)
       end
 
       def backend
-        os == 'Windows' ? Backends::Cmd : Backends::Exec
+        os == 'Windows' ? :cmd : :exec
       end
     end
   end

@@ -29,6 +29,7 @@ module NodeSpec
           current_session = start_new_ssh_session
           configuration.host = @host
           configuration.ssh = current_session
+          configuration.ssh_options = current_session.options
         end
         @session = current_session
       end

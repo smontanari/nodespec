@@ -3,8 +3,8 @@ PATH
   specs:
     nodespec (0.1.10)
       net-ssh
-      serverspec (~> 0.15)
-      specinfra (~> 1.18)
+      serverspec (~> 2.3)
+      specinfra (~> 2.4)
 
 GEM
   remote: https://rubygems.org/
@@ -22,7 +22,6 @@ GEM
       ffi (>= 1.0.1)
     gyoku (1.1.1)
       builder (>= 2.1.2)
-    highline (1.6.21)
     httpclient (2.4.0)
     httpi (0.9.7)
       rack
@@ -33,6 +32,8 @@ GEM
       multi_json (>= 1.8.4)
     mini_portile (0.6.0)
     multi_json (1.10.1)
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
     nokogiri (1.6.2.1)
       mini_portile (= 0.6.0)
@@ -48,6 +49,9 @@ GEM
     rspec-expectations (3.0.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.0.0)
+    rspec-its (1.0.1)
+      rspec-core (>= 2.99.0.beta1)
+      rspec-expectations (>= 2.99.0.beta1)
     rspec-mocks (3.0.2)
       rspec-support (~> 3.0.0)
     rspec-support (3.0.2)
@@ -60,12 +64,14 @@ GEM
       nokogiri (>= 1.4.0)
       nori (~> 1.0)
       wasabi (~> 1.0)
-    serverspec (0.15.4)
-      highline
+    serverspec (2.3.1)
+      multi_json
+      rspec (~> 3.0)
+      rspec-its
+      specinfra (~> 2.3)
+    specinfra (2.4.1)
+      net-scp
       net-ssh
-      rspec (>= 2.13.0)
-      specinfra (>= 0.7.1)
-    specinfra (1.22.0)
     uuidtools (2.1.4)
     wasabi (1.0.0)
       nokogiri (>= 1.4.0)

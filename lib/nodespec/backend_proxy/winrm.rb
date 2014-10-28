@@ -4,7 +4,7 @@ require_relative 'base'
 
 module NodeSpec
   module BackendProxy
-    class WinRM < Base
+    class Winrm < Base
       def initialize(winrm)
         @winrm_session = winrm
       end

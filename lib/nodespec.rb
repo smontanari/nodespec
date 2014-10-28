@@ -19,17 +19,11 @@ RSpec.configure do |config|
   config.before :all do |eg|
     if eg.class.metadata.key?(:nodespec)
       NodeSpec.set_current_node(eg.class.description, eg.class.metadata[:nodespec]) do |node|
-        config.os = node.os
+        Specinfra.configuration.backend = node.backend
+        property[:os] = {}
+        config.os = Specinfra::Helper::DetectOs.const_get(node.os).detect if node.os && node.os != 'Windows'
         node.communicator.bind_to(config)
       end
-    end
-  end
-
-  config.before :each do
-    subject_type = subject.class.name.rpartition('::').first
-    if subject_type == Serverspec::Type.name
-      subject.extend SpecInfra::Helper.const_get(NodeSpec.current_node.backend)
-      subject.extend SpecInfra::Helper.const_get(NodeSpec.current_node.os || 'DetectOS')
     end
   end
 

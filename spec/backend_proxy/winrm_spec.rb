@@ -2,9 +2,9 @@ require 'nodespec/backend_proxy/winrm'
 
 module NodeSpec
   module BackendProxy
-    describe WinRM do
+    describe Winrm do
       let(:winrm) { double('winrm session') }
-      let(:subject) {WinRM.new(winrm)}
+      let(:subject) {Winrm.new(winrm)}
       before do
         allow(winrm).to receive(:set_timeout).with(NodeSpec::RunOptions.command_timeout)
       end

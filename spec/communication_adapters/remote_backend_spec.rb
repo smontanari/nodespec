@@ -19,7 +19,7 @@ module NodeSpec
           end
         end
 
-        it_behaves_like 'providing a backend', 'Ssh'
+        it_behaves_like 'providing a backend', :ssh, BackendProxy::Ssh
       end
 
       context 'UN*X os' do
@@ -29,7 +29,7 @@ module NodeSpec
           end
         end
 
-        it_behaves_like 'providing a backend', 'Ssh'
+        it_behaves_like 'providing a backend', :ssh, BackendProxy::Ssh
       end
 
       context 'Windows os' do
@@ -39,7 +39,7 @@ module NodeSpec
           end
         end
 
-        it_behaves_like 'providing a backend', 'WinRM'
+        it_behaves_like 'providing a backend', :winrm, BackendProxy::Winrm
       end
     end
   end

@@ -11,7 +11,7 @@ module NodeSpec
           def subject.os
           end
         end
-        it_behaves_like 'providing a backend', 'Exec'
+        it_behaves_like 'providing a backend', :exec, BackendProxy::Exec
       end
 
       context 'UN*X os' do
@@ -21,7 +21,7 @@ module NodeSpec
           end
         end
 
-        it_behaves_like 'providing a backend', 'Exec'
+        it_behaves_like 'providing a backend', :exec, BackendProxy::Exec
       end
 
       context 'Windows os' do
@@ -31,7 +31,7 @@ module NodeSpec
           end
         end
 
-        it_behaves_like 'providing a backend', 'Cmd'
+        it_behaves_like 'providing a backend', :cmd, BackendProxy::Cmd
       end
     end
   end

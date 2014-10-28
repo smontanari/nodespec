@@ -1,14 +1,14 @@
-require 'nodespec/backends'
+require 'nodespec/backend_proxy'
 
 module NodeSpec
   module CommunicationAdapters
     module RemoteBackend
       def backend_proxy
-        BackendProxy.const_get(backend).new(session)
+        BackendProxy.create(backend, session)
       end
 
       def backend
-        os == 'Windows' ? Backends::WinRM : Backends::Ssh
+        os == 'Windows' ? :winrm : :ssh
       end
     end
   end

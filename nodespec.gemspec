@@ -20,8 +20,8 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 1.9.3'
 
   gem.add_runtime_dependency 'net-ssh'
-  gem.add_runtime_dependency 'serverspec', '~> 0.15'
-  gem.add_runtime_dependency 'specinfra', '~> 1.18'
+  gem.add_runtime_dependency 'serverspec', '~> 2.3'
+  gem.add_runtime_dependency 'specinfra', '~> 2.4'
   gem.add_development_dependency 'rspec', '~> 3.0'
   gem.add_development_dependency 'aws-sdk'
   gem.add_development_dependency 'winrm'

@@ -1,6 +1,4 @@
-require 'specinfra/helper'
 require 'nodespec/communication_adapters'
-require 'nodespec/communication_adapters/native_communicator'
 
 module NodeSpec
   class Node
