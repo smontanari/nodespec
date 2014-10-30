@@ -1,7 +1,9 @@
 require 'rspec'
-
 require 'serverspec'
+require 'specinfra'
+
 require 'nodespec/node_configurations'
+require 'nodespec/configuration_binding'
 require 'nodespec/run_options'
 require 'nodespec/provisioning'
 
@@ -19,10 +21,12 @@ RSpec.configure do |config|
   config.before :all do |eg|
     if eg.class.metadata.key?(:nodespec)
       NodeSpec.set_current_node(eg.class.description, eg.class.metadata[:nodespec]) do |node|
+        property[:os] = nil # prevent os caching so we can switch os for any node test
+        config.os = Specinfra::Helper::DetectOs.const_get(node.os).detect if node.os
+
         Specinfra.configuration.backend = node.backend
-        property[:os] = {}
-        config.os = Specinfra::Helper::DetectOs.const_get(node.os).detect if node.os && node.os != 'Windows'
-        node.communicator.bind_to(config)
+
+        node.communicator.bind_to(NodeSpec::ConfigurationBinding.new(config))
       end
     end
   end

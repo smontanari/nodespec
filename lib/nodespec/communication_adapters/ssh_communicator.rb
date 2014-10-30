@@ -18,18 +18,15 @@ module NodeSpec
       end
 
       def bind_to(configuration)
-        configuration.winrm = nil if configuration.winrm
-        current_session = configuration.ssh
+        configuration.unbind_winrm_session
 
-        close_ssh_session(current_session) if current_session && (current_session.host != @host || current_session.options[:port] != @ssh_options[:port])
-
-        if current_session.nil? || current_session.closed?
-          current_session = start_new_ssh_session
-          configuration.host = @host
-          configuration.ssh = current_session
-          configuration.ssh_options = current_session.options
+        @session = configuration.bind_ssh_session_for(@host, @ssh_options[:port]) do
+          msg = "\nConnecting to #{@host}"
+          msg << ":#{@ssh_options[:port]}" if @ssh_options[:port]
+          msg << " as #{@user}..."
+          verbose_puts msg
+          Net::SSH.start(@host, @user, @ssh_options)
         end
-        @session = current_session
       end
 
       def backend_proxy
@@ -38,23 +35,6 @@ module NodeSpec
 
       def backend
         :ssh
-      end
-
-      private
-
-      def close_ssh_session(session)
-        msg = "\nClosing connection to #{session.host}"
-        msg << ":#{session.options[:port]}" if session.options[:port]
-        verbose_puts msg
-        session.close
-      end
-
-      def start_new_ssh_session
-        msg = "\nConnecting to #{@host}"
-        msg << ":#{@ssh_options[:port]}" if @ssh_options[:port]
-        msg << " as #{@user}..."
-        verbose_puts msg
-        Net::SSH.start(@host, @user, @ssh_options)
       end
     end
   end

@@ -3,7 +3,7 @@ nodespec
 
 RSpec style tests for multiple nodes/server instances with support for provisioning with puppet, chef, ansible.
 
-- [Documentation](https://github.com/smontanari/nodespec/wiki)
+- [**Read the documentation**](https://github.com/smontanari/nodespec/wiki)
 
 ## Nodespec vs Serverspec
 [Serverspec](http://serverspec.org) is a popular gem that allows you to write rspec tests to validate your servers/hosts configuration.
@@ -39,7 +39,7 @@ end
 No more ruby code and create programmatically SSH objects, just a quick and easy inline (or file/yaml based) configuration:
 
 ```ruby
-describe "test.example1.com", nodespec: {
+describe "test.example.com", nodespec: {
     'adapter' => 'ssh',
     'user'    => 'testuser',
     'keys'    => 'path/to/key'
@@ -50,10 +50,10 @@ end
 #### Support connections to Windows & Un*x servers
 One of the major limitations of serverspec is that you have to make a hard decision beforehand on which OS/backend you are targeting with your tests. In particular you have to include specific specinfra modules in your `spec_helper` depending on whether you're connecting to Un\*x or Windows machines, and you cannot test both OS as part of the same spec run (unless you start hacking some conditional logic in your spec_helper, that is).
 
-With Nodespec that problem is resolved and you can easily connect and test multiple OS and multiple backends in the same rspec run. For instance, to connect to a windows box:
+With Nodespec that problem is resolved and you can easily connect and test multiple OS and multiple backends in the same rspec run. For instance, to connect to a Gentoo box:
 ```ruby
 describe "test.example2.com", nodespec: {
-    'os'              => 'Windows',
+    'os'              => 'Gentoo',
     'adapter'         => 'winrm',
     'user'            => 'testuser',
     'pass'            => 'somepass',
@@ -82,13 +82,13 @@ end
 
 #### Puppet
 ```ruby
-describe "server1", nodespec: {'adapter' => 'vagrant'} do
+describe "test.server", nodespec: {'adapter' => 'ssh'} do
   before :all do
     provision_node_with_puppet do
       set_modulepaths '/vshared/src/modules'
       set_hieradata('users' => {'roger' => {'uid' => 5801}, 'peter' => {'uid' => 5802}})
       puppet_apply_execute "include demo::wheel_users"
-    end
+    end    
   end
 ...
 end

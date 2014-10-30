@@ -1,3 +1,4 @@
+require 'winrm'
 require 'nodespec/verbose_output'
 require 'nodespec/runtime_gem_loader'
 require 'nodespec/backend_proxy'
@@ -12,11 +13,11 @@ module NodeSpec
 
       attr_reader :session
 
-      def initialize(hostname, options = {})
-        @hostname = hostname
+      def initialize(host, options = {})
+        @host = host
         opts = options.dup
         port = opts.delete('port') || DEFAULT_PORT
-        @endpoint = "http://#{hostname}:#{port}/wsman"
+        @endpoint = "http://#{host}:#{port}/wsman"
 
         if opts.has_key?('transport')
           @transport = opts.delete('transport').to_sym
@@ -29,18 +30,14 @@ module NodeSpec
       end
 
       def bind_to(configuration)
-        if configuration.ssh
-          close_ssh_session(configuration.ssh)
-          configuration.ssh = nil
-        end
+        configuration.unbind_ssh_session
 
-        current_session = configuration.winrm
-        if current_session.nil? || current_session.endpoint != @endpoint
-          current_session = start_winrm_session
-          configuration.winrm = current_session
-          configuration.host = @hostname
+        @session = configuration.bind_winrm_session_for(@host, @endpoint) do
+          RuntimeGemLoader.require_or_fail('winrm') do
+            verbose_puts "\nConnecting to #{@endpoint}..."
+            WinRM::WinRMWebService.new(@endpoint, @transport, @options)
+          end
         end
-        @session = current_session
       end
 
       def backend_proxy
@@ -49,22 +46,6 @@ module NodeSpec
 
       def backend
         :winrm
-      end
-
-      private
-
-      def close_ssh_session(session)
-        msg = "\nClosing connection to #{session.host}"
-        msg << ":#{session.options[:port]}" if session.options[:port]
-        verbose_puts msg
-        session.close
-      end
-
-      def start_winrm_session
-        RuntimeGemLoader.require_or_fail('winrm') do
-          verbose_puts "\nConnecting to #{@endpoint}..."
-          WinRM::WinRMWebService.new(@endpoint, @transport, @options)
-        end
       end
     end
   end
