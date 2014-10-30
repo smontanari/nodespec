@@ -3,7 +3,7 @@ require 'nodespec/backend_proxy/unixshell_utility'
 module NodeSpec
   module BackendProxy
     describe UnixshellUtility do
-      let(:subject) {Object.new.extend UnixshellUtility}
+      subject {Object.new.extend UnixshellUtility}
 
       it 'returns the command as run by sudo' do
         expect(subject.run_as_sudo('command')).to eq 'sudo command'

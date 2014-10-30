@@ -1,4 +1,3 @@
-require 'net/ssh'
 require_relative 'ssh_communicator'
 
 module NodeSpec

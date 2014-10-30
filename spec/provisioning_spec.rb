@@ -9,7 +9,7 @@ module NodeSpec
       'shellscript' => Provisioning::Shellscript
     }
 
-    let(:subject) {Object.new.extend Provisioning}
+    subject {Object.new.extend Provisioning}
     let(:provisioning_block) {Proc.new {}}
 
     before do

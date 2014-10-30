@@ -3,7 +3,7 @@ require 'nodespec/local_command_runner'
 
 module NodeSpec
   describe LocalCommandRunner do
-    let(:subject) {Object.new.extend LocalCommandRunner}
+    subject {Object.new.extend LocalCommandRunner}
     let(:cmd_status) { double('status') }
 
     before do

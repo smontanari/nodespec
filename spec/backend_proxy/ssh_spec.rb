@@ -4,7 +4,7 @@ module NodeSpec
   module BackendProxy
     describe Ssh do
       let(:ssh_session) { double('ssh session') }
-      let(:subject) {Ssh.new(ssh_session)}
+      subject {Ssh.new(ssh_session)}
 
       shared_examples 'an ssh session command run' do |user, original_command, actual_command|
         before do

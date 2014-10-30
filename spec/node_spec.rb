@@ -85,7 +85,7 @@ module NodeSpec
       end
 
       context 'no os given' do
-        let(:subject) {Node.new('test_node', 'adapter' => 'test_adapter', 'foo' => 'bar')}
+        subject {Node.new('test_node', 'adapter' => 'test_adapter', 'foo' => 'bar')}
 
         before do
           allow(CommunicationAdapters).to receive(:get_communicator).with('test_node', 'test_adapter', 'foo' => 'bar').and_return(communicator)
@@ -96,7 +96,7 @@ module NodeSpec
       end
 
       context 'os given' do
-        let(:subject) {Node.new('test_node', 'os' => 'test_os', 'adapter' => 'test_adapter', 'foo' => 'bar')}
+        subject {Node.new('test_node', 'os' => 'test_os', 'adapter' => 'test_adapter', 'foo' => 'bar')}
 
         before do
           allow(CommunicationAdapters).to receive(:get_communicator).with('test_node', 'test_adapter', 'foo' => 'bar').and_return(communicator)

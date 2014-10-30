@@ -2,7 +2,7 @@ require 'nodespec/command_execution'
 
 module NodeSpec
   describe CommandExecution do
-    let(:subject) {Object.new.extend CommandExecution}
+    subject {Object.new.extend CommandExecution}
 
     it 'does not raise an error if the command succeeds' do
       subject.execute_within_timeout('test command') { true }
