@@ -17,12 +17,12 @@ module NodeSpec
         before do
           allow(ec2_instance).to receive(:exists?).ordered.and_return(true)
           allow(ec2_instance).to receive(:status).ordered.and_return(:running)
-          allow(ec2_instance).to receive(:public_dns_name).ordered.and_return('test.host.name')
+          allow(ec2_instance).to receive(:public_ip_address).ordered.and_return('ip_address')
         end
 
         %w[ssh winrm].each do |connection|
           describe "#{connection} communicator" do
-            include_context "new_#{connection}_communicator", 'test.host.name', 'foo' => 'bar'
+            include_context "new_#{connection}_communicator", 'ip_address', 'foo' => 'bar'
 
             it 'returns communicator with the instance name from the node name' do
               expect(AwsEc2.communicator_for('test-instance', connection => {'foo' => 'bar'})).to eq("#{connection} communicator")
@@ -35,7 +35,7 @@ module NodeSpec
         end
 
         describe 'openssh default connection' do
-          include_context "new_ssh_communicator", 'test.host.name', {}
+          include_context "new_ssh_communicator", 'ip_address', {}
 
           it 'returns an ssh communicator' do
             expect(AwsEc2.communicator_for('test-instance')).to eq("ssh communicator")

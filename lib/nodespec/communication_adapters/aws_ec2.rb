@@ -13,9 +13,9 @@ module NodeSpec
 
           raise "EC2 Instance #{instance_name} is not reachable" unless ec2_instance.exists? && ec2_instance.status == :running
           if options.has_key?('winrm')
-            WinrmCommunicator.new(ec2_instance.public_dns_name, options['winrm'])
+            WinrmCommunicator.new(ec2_instance.public_ip_address, options['winrm'])
           else
-            SshCommunicator.new(ec2_instance.public_dns_name, options['ssh'] || {})
+            SshCommunicator.new(ec2_instance.public_ip_address, options['ssh'] || {})
           end
         end
       end
