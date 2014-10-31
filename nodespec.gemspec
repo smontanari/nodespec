@@ -23,7 +23,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'serverspec', '~> 2.3'
   gem.add_runtime_dependency 'specinfra', '~> 2.4'
   gem.add_runtime_dependency 'os'
-  gem.add_development_dependency 'rspec', '~> 3.0'
+  gem.add_development_dependency 'rspec', '~> 3.1'
   gem.add_development_dependency 'aws-sdk'
   gem.add_development_dependency 'winrm'
   gem.add_development_dependency 'bundler'
