@@ -29,10 +29,10 @@ module NodeSpec
         @options = @options.inject({}) {|h,(k,v)| h[k.to_sym] = v; h}
       end
 
-      def bind_to(configuration)
+      def init_session(configuration)
         configuration.unbind_ssh_session
 
-        @session = configuration.bind_winrm_session_for(@host, @endpoint) do
+        @session = configuration.bind_winrm_session_for({host: @host, endpoint: @endpoint}) do
           RuntimeGemLoader.require_or_fail('winrm') do
             verbose_puts "\nConnecting to #{@endpoint}..."
             WinRM::WinRMWebService.new(@endpoint, @transport, @options)

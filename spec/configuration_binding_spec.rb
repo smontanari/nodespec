@@ -17,7 +17,7 @@ module NodeSpec
           expect(configuration).to receive(:ssh_options=).with({port: 1234})
           expect(configuration).to receive(:host=).with('test.host.name')
 
-          session = subject.bind_ssh_session_for('test.host.name', 1234) {new_session}
+          session = subject.bind_ssh_session_for({host: 'test.host.name', port: 1234}) {new_session}
           expect(session).to be(new_session)
         end
       end
@@ -75,7 +75,7 @@ module NodeSpec
         end
 
         it 'does not change the exisintg session' do
-          session = subject.bind_ssh_session_for('test.host.name', 1234) {new_session}
+          session = subject.bind_ssh_session_for({host: 'test.host.name', port: 1234}) {new_session}
           expect(session).to be(existing_session)
         end
       end
@@ -104,7 +104,7 @@ module NodeSpec
           expect(configuration).to receive(:winrm=).with(new_session)
           expect(configuration).to receive(:host=).with('test.host.name')
 
-          session = subject.bind_winrm_session_for('test.host.name', 'test.endpoint') {new_session}
+          session = subject.bind_winrm_session_for({host: 'test.host.name', endpoint: 'test.endpoint'}) {new_session}
           expect(session).to be(new_session)
         end
       end
@@ -147,7 +147,7 @@ module NodeSpec
         end
 
         it 'does not change the exisintg session' do
-          session = subject.bind_winrm_session_for('test.host.name', 'test.endpoint') {new_session}
+          session = subject.bind_winrm_session_for({host: 'test.host.name', endpoint: 'test.endpoint'}) {new_session}
           expect(session).to be(existing_session)
         end
       end
@@ -155,6 +155,7 @@ module NodeSpec
 
     describe '#unbind_winrm_session' do
       before do
+        expect(configuration).to receive(:winrm)
         expect(configuration).to receive(:winrm=).with(nil)
         expect(configuration).to receive(:host=).with(nil)
       end

@@ -17,10 +17,10 @@ module NodeSpec
         end
       end
 
-      def bind_to(configuration)
+      def init_session(configuration)
         configuration.unbind_winrm_session
 
-        @session = configuration.bind_ssh_session_for(@host, @ssh_options[:port]) do
+        @session = configuration.bind_ssh_session_for({host: @host, port: @ssh_options[:port]}) do
           msg = "\nConnecting to #{@host}"
           msg << ":#{@ssh_options[:port]}" if @ssh_options[:port]
           msg << " as #{@user}..."

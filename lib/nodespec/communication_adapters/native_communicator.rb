@@ -7,7 +7,7 @@ module NodeSpec
     class NativeCommunicator
       include VerboseOutput
 
-      def bind_to(configuration)
+      def init_session(configuration)
         configuration.unbind_ssh_session
         configuration.unbind_winrm_session
         verbose_puts "\nRunning on local host..."

@@ -21,3 +21,11 @@ shared_examples 'new_communicator' do |adapter_clazz, connection|
     expect(adapter_clazz.communicator_for('test_node', 'host' => 'test.host.name', 'foo' => 'bar')).to eq("#{connection} communicator")
   end
 end
+
+shared_examples 'initializing communicator session' do
+  it 'returns a session' do
+    subject.init_session(configuration)
+
+    expect(subject.session).to eq('session')
+  end
+end

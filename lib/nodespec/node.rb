@@ -15,10 +15,6 @@ module NodeSpec
       @communicator = CommunicationAdapters.get_communicator(@name, adapter_name, opts)
     end
 
-    def backend
-      @communicator.backend
-    end
-
     [:create_directory, :create_file].each do |met|
       define_method(met) do |*args|
         path_argument = args.shift

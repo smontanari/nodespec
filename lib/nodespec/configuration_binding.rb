@@ -4,31 +4,24 @@ module NodeSpec
   class ConfigurationBinding
     include VerboseOutput
 
+    BACKEND_ACTIONS = {
+      ssh: {
+        diff_session: lambda { |ssh, params| ssh.host != params[:host] || ssh.options[:port] != params[:port] },
+        bind_attributes: lambda { |ssh, config| config.ssh_options = ssh.options }
+      },
+      winrm: {
+        diff_session: lambda { |winrm, params| winrm.endpoint != params[:endpoint] }
+      }
+    }
+
     def initialize(configuration)
       @configuration = configuration
     end
 
-    def bind_ssh_session_for(host, port)
-      current_session = @configuration.ssh
-      if current_session.nil? || current_session.host != host || current_session.options[:port] != port
-        unbind_ssh_session
-        current_session = yield
-        @configuration.ssh = current_session
-        @configuration.ssh_options = current_session.options
-        @configuration.host = current_session.host
+    BACKEND_ACTIONS.keys.each do |backend|
+      define_method("bind_#{backend}_session_for") do |params, &block|
+        bind_session_for(backend, params, &block)
       end
-      current_session
-    end
-
-    def bind_winrm_session_for(host, endpoint)
-      current_session = @configuration.winrm
-      if current_session.nil? || current_session.endpoint != endpoint
-        unbind_winrm_session
-        current_session = yield
-        @configuration.winrm = current_session
-        @configuration.host = host
-      end
-      current_session
     end
 
     def unbind_ssh_session
@@ -42,7 +35,22 @@ module NodeSpec
     end
 
     def unbind_winrm_session
+      verbose_puts "\nClosing connection to #{@configuration.winrm.endpoint}" if @configuration.winrm
       @configuration.winrm = @configuration.host = nil
+    end
+
+    private
+
+    def bind_session_for(backend, params)
+      current_session = @configuration.send(backend)
+      if current_session.nil? || BACKEND_ACTIONS[backend][:diff_session].call(current_session, params)
+        send("unbind_#{backend}_session")
+        current_session = yield
+        @configuration.send("#{backend}=", current_session)
+        @configuration.host = params[:host]
+        BACKEND_ACTIONS[backend][:bind_attributes].call(current_session, @configuration) if BACKEND_ACTIONS[backend][:bind_attributes]
+      end
+      current_session
     end
   end
 end

@@ -21,13 +21,13 @@ module NodeSpec
         end
       end
 
-      describe '#bind_to' do
+      describe '#init_session' do
         let(:configuration) {double('configuration')}
 
         it 'unbinds other sessions' do
           expect(configuration).to receive(:unbind_ssh_session)
           expect(configuration).to receive(:unbind_winrm_session)
-          subject.bind_to(configuration)
+          subject.init_session(configuration)
         end
       end
     end

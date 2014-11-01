@@ -24,9 +24,9 @@ RSpec.configure do |config|
         property[:os] = nil # prevent os caching so we can switch os for any node test
         config.os = Specinfra::Helper::DetectOs.const_get(node.os).detect if node.os
 
-        Specinfra.configuration.backend = node.backend
+        Specinfra.configuration.backend = node.communicator.backend
 
-        node.communicator.bind_to(NodeSpec::ConfigurationBinding.new(config))
+        node.communicator.init_session(NodeSpec::ConfigurationBinding.new(config))
       end
     end
   end
