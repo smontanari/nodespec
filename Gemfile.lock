@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nodespec (1.0.0)
+    nodespec (1.0.1)
       net-ssh
       os
       serverspec (~> 2.3)
