@@ -11,11 +11,11 @@ RSpec style tests for multiple nodes/server instances with support for provision
 Nodespec is not an alternative to Serverspec, rather it's build on top of it, so you can still leverage all of its features while enjoying some extra goodies.
 
 #### What's different
-Nodespec overcomes some of the limitations of Serverspec, such as mixed OS' support (Windows and UN*X), multiple backends (Ssh and Winrm) and easy configurability and connectivity to your target hosts.
+Nodespec overcomes some of the limitations of Serverspec, such as mixed OS'/backends support (Windows/WinRM and UN*X/SSH) and easy configurability and connectivity to your target hosts.
 
 Nodespec enables a declarative way of configuring your remote connections, be it simple Ssh, a Vagrant box, or an Amazon EC2 instance.
 
-Nodespec adds support for issuing provisiong commands to your target hosts, that could be incorporated as part of your test setup.
+Nodespec adds support for issuing provisioning commands (through Puppet, Chef or Ansible) to your target hosts, that could be incorporated as part of your test setup.
 
 Below is a quick summary of the main features of nodespec. Refer to the [wiki](https://github.com/smontanari/nodespec/wiki) for more details and examples.
 
@@ -48,12 +48,11 @@ describe "test.example.com", nodespec: {
 end
 ```
 #### Support connections to Windows & Un*x servers
-One of the major limitations of serverspec is that you have to make a hard decision beforehand on which OS/backend you are targeting with your tests. In particular you have to include specific specinfra modules in your `spec_helper` depending on whether you're connecting to Un\*x or Windows machines, and you cannot test both OS as part of the same spec run (unless you start hacking some conditional logic in your spec_helper, that is).
+One of the major limitations of serverspec is that you have to make a hard decision beforehand on which OS/backend you are targeting with your tests. In particular you have to include specific specinfra modules in your `spec_helper` depending on whether you're connecting to Un\*x or Windows machines, using ssh or winrm. Practically it is not possible to test different OSs/backends as part of the same spec run, unless you start hacking some conditional logic in your spec_helper, that is.
 
-With Nodespec that problem is resolved and you can easily connect and test multiple OS and multiple backends in the same rspec run. For instance, to connect to a Gentoo box:
+With Nodespec that problem is resolved and you can easily connect and test multiple OS and multiple backends in the same rspec run by simply specifying the desired adapter and connection properties for your target host. For instance, to connect to a Windows/WinRM box:
 ```ruby
-describe "test.example2.com", nodespec: {
-    'os'              => 'Gentoo',
+describe "test.windows-example.com", nodespec: {
     'adapter'         => 'winrm',
     'user'            => 'testuser',
     'pass'            => 'somepass',
@@ -88,7 +87,7 @@ describe "test.server", nodespec: {'adapter' => 'ssh'} do
       set_modulepaths '/vshared/src/modules'
       set_hieradata('users' => {'roger' => {'uid' => 5801}, 'peter' => {'uid' => 5802}})
       puppet_apply_execute "include demo::wheel_users"
-    end    
+    end
   end
 ...
 end
