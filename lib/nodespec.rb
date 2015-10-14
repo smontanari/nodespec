@@ -6,6 +6,7 @@ require 'nodespec/node_configurations'
 require 'nodespec/configuration_binding'
 require 'nodespec/run_options'
 require 'nodespec/provisioning'
+require 'nodespec/monkey_patch'
 
 module NodeSpec
   class << self
